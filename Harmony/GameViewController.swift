@@ -42,6 +42,47 @@ let vertexColorData:[Float] =
     1.0, 0.0, 0.0, 1.0
 ]
 
+struct Stack<T> {
+    private var elements: [T]
+
+    mutating func push(element: T) {
+        elements.append(element)
+    }
+    
+    mutating func pop() -> T? {
+        let t = elements.last
+        elements.removeLast()
+        return t
+    }
+    
+    func top() -> T? {
+        return elements.last
+    }
+}
+
+
+class InputView: MTKView {
+    required init(coder: NSCoder) {
+        super.init(coder: coder)
+        
+        paused = true
+        enableSetNeedsDisplay = false
+
+        Swift.print("init with coder")
+    }
+    
+    override func keyUp(theEvent: NSEvent) {
+        Swift.print("hello key up")
+    }
+    override func keyDown(theEvent: NSEvent) {
+        Swift.print("hello key down")
+    }
+
+    override var acceptsFirstResponder: Bool {
+        return true
+    }
+}
+
 class GameViewController: NSViewController, MTKViewDelegate {
     
     var device: MTLDevice! = nil
@@ -61,7 +102,6 @@ class GameViewController: NSViewController, MTKViewDelegate {
     var yDelta:[Float] = [ 0.001,  0.002, -0.001 ]
 
     override func viewDidLoad() {
-        
         super.viewDidLoad()
         
         device = MTLCreateSystemDefaultDevice()
@@ -76,6 +116,7 @@ class GameViewController: NSViewController, MTKViewDelegate {
         view.delegate = self
         view.device = device
         view.sampleCount = 4
+        view.becomeFirstResponder()
         
         loadAssets()
     }
@@ -166,7 +207,8 @@ class GameViewController: NSViewController, MTKViewDelegate {
             return
         }
         
-        if let renderPassDescriptor = view.currentRenderPassDescriptor, currentDrawable = view.currentDrawable
+        if let renderPassDescriptor = view.currentRenderPassDescriptor,
+               currentDrawable = view.currentDrawable
         {
             let renderEncoder = commandBuffer.renderCommandEncoderWithDescriptor(renderPassDescriptor)
             renderEncoder.label = "render encoder"
