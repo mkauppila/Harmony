@@ -53,6 +53,7 @@ enum KeyCode: UInt16 {
     case RightArrow = 124
 }
 
+// This is very nicely unit testable
 struct EntityComponentStore {
     var renderables: [UInt: Renderable]
     var physicals: [UInt: Physical]
@@ -193,11 +194,13 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
         redTriangle = Triangle(device, name: "red", position: GLKVector3Make(0.5, 0.0, -0.5), color: GLKVector3Make(0.8, 0.1, 0.1))
         greenTriangle = Triangle(device, name: "green", position: GLKVector3Make(-0.5, 0.0, -1.0), color: GLKVector3Make(0.1, 0.8, 0.1))
 
-        test = Renderable(vertexBuffer: createVertexBufferFrom(playerShipModel(), device: device),
+        test = Renderable(objectId: 0,
+                          vertexBuffer: createVertexBufferFrom(playerShipModel(), device: device),
                           vertexSizeInBytes: Vertex.sizeInBytes())
-        testP = Physical(position: GLKVector3Make(0, 0.0, -0.5), angleInDegrees: 180);
+        testP = Physical(objectId: 0, position: GLKVector3Make(0, 0.0, -0.5), angleInDegrees: 180);
+
         gameObject = GameObject(objectId: 0, renderable: test, physical: testP)
-        gameObjects.append(gameObject)
+//        gameObjects.append(gameObject)
 
 //        store.addRenderable(test, toObjectId: 0)
         store.addComponentForObjectId(test, objectId: 0)
@@ -281,8 +284,11 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
         renderTriangle(redTriangle, renderPipelineState: defaultPipelineState, renderCommandEncoder: renderCommandEncoder)
         renderTriangle(greenTriangle, renderPipelineState: blackAndWhitePipelineState, renderCommandEncoder: renderCommandEncoder)
 
-        for gameObject in gameObjects {
-            renderGameObject(gameObject, renderPipelineState: defaultPipelineState, renderCommandEncoder: renderCommandEncoder)
+        let allRenderables: [Renderable] = store.allComponentsOfType()
+        for renderable in allRenderables  {
+            renderRenderable(renderable,
+                             renderPipelineState: defaultPipelineState,
+                             renderCommandEncoder: renderCommandEncoder)
         }
 
         renderCommandEncoder.endEncoding()
@@ -298,11 +304,13 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
         renderCommandEncoder.drawPrimitives(.Triangle, vertexStart: 0, vertexCount: triangle.vertexCount, instanceCount: 1)
     }
 
-    func renderGameObject(gameObject: GameObject, renderPipelineState: MTLRenderPipelineState, renderCommandEncoder: MTLRenderCommandEncoder) {
+    func renderRenderable(renderable: Renderable, renderPipelineState: MTLRenderPipelineState, renderCommandEncoder: MTLRenderCommandEncoder) {
         renderCommandEncoder.setRenderPipelineState(renderPipelineState)
         renderCommandEncoder.setVertexBuffer(gameObject.renderable.vertexBuffer, offset: 0, atIndex: 0)
 
-        renderCommandEncoder.setVertexBuffer(createUniformMatrixFor(testP.modelMatrix()), offset: 0, atIndex: 1)
+        if let physical: Physical = store.findComponentForObjectId(renderable.objectId) {
+            renderCommandEncoder.setVertexBuffer(createUniformMatrixFor(physical.modelMatrix()), offset: 0, atIndex: 1)
+        }
         renderCommandEncoder.drawPrimitives(.Triangle, vertexStart: 0, vertexCount: gameObject.renderable.vertexCount, instanceCount: 1)
     }
 

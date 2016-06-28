@@ -30,20 +30,25 @@ func createVertexBufferFrom(vertices: [Vertex], device: MTLDevice) -> MTLBuffer 
 }
 
 protocol Component {
-    // should most likely contain the objectId
+    var objectId: UInt { get }
 }
 
 struct Renderable: Component {
+    private (set) var objectId: UInt
+
     let vertexBuffer: MTLBuffer
     let vertexCount: Int
 
-    init(vertexBuffer: MTLBuffer, vertexSizeInBytes: Int) {
+    init(objectId: UInt, vertexBuffer: MTLBuffer, vertexSizeInBytes: Int) {
+        self.objectId = objectId
         self.vertexBuffer = vertexBuffer
         vertexCount = self.vertexBuffer.length / vertexSizeInBytes
     }
 }
 
 struct Physical: Component {
+    private (set) var objectId: UInt
+
     let position: GLKVector3
     let angleInDegrees: Float
 
