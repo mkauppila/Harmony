@@ -62,22 +62,53 @@ struct EntityComponentStore {
         physicals = [UInt: Physical]()
     }
 
-    mutating func addRenderable(renderable: Renderable, toObjectId objectId: UInt) {
-        renderables[objectId] = renderable
+    mutating func addComponentForObjectId<T: Component>(component: T, objectId: UInt) {
+        switch T.self {
+        case is Renderable.Type:
+            renderables[objectId] = component as? Renderable
+        case is Physical.Type:
+            physicals[objectId] = component as? Physical
+        default:
+            break
+        }
     }
 
-    mutating func addPhysical(physical: Physical, toObjectId objectId: UInt) {
-        physicals[objectId] = physical
+    mutating func removeComponentForObjectId<T: Component>(component: T, objectId: UInt) {
+        switch T.self {
+        case is Renderable.Type:
+            renderables.removeValueForKey(objectId)
+        case is Physical.Type:
+            physicals.removeValueForKey(objectId)
+        default:
+            break
+        }
     }
 
-//    func findComponentForObjectId(componentType: Type, objectId: UInt) -> Component? {
-//        switch componentType {
-//        case is Renderable:
-//            return renderables[objectId]
-//        case is Physical:
-//            return physicals[objectId]
-//        }
-//    }
+    func allComponentsOfType<T: Component>() -> [T] {
+        switch T.self {
+        case is Renderable.Type:
+            return renderables.map({ (_, renderable) -> T in
+                return renderable as! T
+            })
+        case is Physical.Type:
+            return physicals.map({ (_, physical) -> T in
+                return physicals as! T
+            })
+        default:
+            return []
+        }
+    }
+
+    func findComponentForObjectId<T: Component>(objectId: UInt) -> T? {
+        switch T.self {
+        case is Renderable.Type:
+            return renderables[objectId] as? T
+        case is Physical.Type:
+            return physicals[objectId] as? T
+        default:
+            return nil
+        }
+    }
 }
 
 struct GameObject {
@@ -177,6 +208,20 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
         gameObjects.append(gameObject)
 
 //        store.addRenderable(test, toObjectId: 0)
+        store.addComponentForObjectId(test, objectId: 0)
+        store.addComponentForObjectId(testP, objectId: 0)
+        let v: Renderable = store.findComponentForObjectId(0)!
+        print(v)
+        let vv: Physical = store.findComponentForObjectId(0)!
+        print(vv)
+//        store.removeComponentForObjectId(test, objectId: 0)
+
+        let a: [Renderable] = store.allComponentsOfType()
+        print(a)
+
+//        let vvv: Renderable = store.findComponentForObjectId(0)!
+//        print(vvv)
+
 
         let defaultLibrary = device.newDefaultLibrary()!
         defaultPipelineState = createRenderingPipelineWithVertexShader("basic_vertex", fragmentShaderName: "basic_fragment", library: defaultLibrary)
