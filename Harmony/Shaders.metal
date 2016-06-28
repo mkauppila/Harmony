@@ -29,6 +29,7 @@ vertex VertexOut basic_vertex(const device VertexIn *vertexArray [[ buffer(0) ]]
                               const device Uniforms *uniforms [[ buffer(1) ]],
                               unsigned int vid [[ vertex_id ]]) {
     VertexIn vertexIn = vertexArray[vid];
+    
     VertexOut vertexOut = {
         .position = uniforms->projectionMatrix * uniforms->modelMatrix * float4(vertexIn.position, 1),
         .color = vertexIn.color
@@ -37,11 +38,21 @@ vertex VertexOut basic_vertex(const device VertexIn *vertexArray [[ buffer(0) ]]
 }
 
 fragment float4 basic_fragment(const VertexOut vertexOut) {
-    return vertexOut.color;
+    if (vertexOut.position.x < 480) {
+        return float4(0.5, 0.5, 0.5, 1.0);
+    } else {
+        return vertexOut.color;
+    }
 }
 
 fragment float4 bw_fragment(const VertexOut vertexOut) {
-    return float4(0.5, 0.5, 0.5, 1.0);
+    if (vertexOut.position.y < 360 * 1.05) {
+        return float4(0.1, 0.4, 0.9, 1.0);
+    } else {
+        return float4(0.5, 0.5, 0.5, 1.0);
+    }
+
+//    return float4(0.5, 0.5, 0.5, 1.0);
 }
 
 

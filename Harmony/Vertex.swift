@@ -17,4 +17,8 @@ struct Vertex {
     func floatBuffer() -> [Float] {
         return [position.x, position.y, position.z, color.r, color.g, color.b, color.a]
     }
+
+    static func sizeInBytes() -> Int {
+        return 7
+    }
 }

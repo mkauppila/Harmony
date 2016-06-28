@@ -52,6 +52,38 @@ enum KeyCode: UInt16 {
     case LeftArrow = 123
     case RightArrow = 124
 }
+
+struct EntityComponentStore {
+    var renderables: [UInt: Renderable]
+    var physicals: [UInt: Physical]
+
+    init() {
+        renderables = [UInt: Renderable]()
+        physicals = [UInt: Physical]()
+    }
+
+    mutating func addRenderable(renderable: Renderable, toObjectId objectId: UInt) {
+        renderables[objectId] = renderable
+    }
+
+    mutating func addPhysical(physical: Physical, toObjectId objectId: UInt) {
+        physicals[objectId] = physical
+    }
+
+//    func findComponentForObjectId(componentType: Type, objectId: UInt) -> Component? {
+//        switch componentType {
+//        case is Renderable:
+//            return renderables[objectId]
+//        case is Physical:
+//            return physicals[objectId]
+//        }
+//    }
+}
+
+struct GameObject {
+    let objectId: Int
+    let renderable: Renderable
+    let physical: Physical
 }
 
 class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelegate {
@@ -64,10 +96,17 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
     var vertexBuffer: MTLBuffer!
 
     var projectionMatrix: GLKMatrix4!
-    var worldMatrix: GLKMatrix4!
+    var cameraMatrix: GLKMatrix4!
 
     var redTriangle: Triangle!
     var greenTriangle: Triangle!
+
+    var gameObject: GameObject!
+    var test: Renderable!
+    var testP: Physical!
+    var store: EntityComponentStore!
+
+    var gameObjects: [GameObject]!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,6 +126,10 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
         view.becomeFirstResponder()
 
         view.inputDelegate = self
+
+        store = EntityComponentStore()
+        gameObjects = []
+
         loadAssets()
     }
 
@@ -127,12 +170,20 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
         redTriangle = Triangle(device, name: "red", position: GLKVector3Make(0.5, 0.0, -0.5), color: GLKVector3Make(0.8, 0.1, 0.1))
         greenTriangle = Triangle(device, name: "green", position: GLKVector3Make(-0.5, 0.0, -1.0), color: GLKVector3Make(0.1, 0.8, 0.1))
 
+        test = Renderable(vertexBuffer: createVertexBufferFrom(playerShipModel(), device: device),
+                          vertexSizeInBytes: Vertex.sizeInBytes())
+        testP = Physical(position: GLKVector3Make(0, 0.0, -0.5), angleInDegrees: 180);
+        gameObject = GameObject(objectId: 0, renderable: test, physical: testP)
+        gameObjects.append(gameObject)
+
+//        store.addRenderable(test, toObjectId: 0)
+
         let defaultLibrary = device.newDefaultLibrary()!
         defaultPipelineState = createRenderingPipelineWithVertexShader("basic_vertex", fragmentShaderName: "basic_fragment", library: defaultLibrary)
         blackAndWhitePipelineState = createRenderingPipelineWithVertexShader("basic_vertex", fragmentShaderName: "bw_fragment", library: defaultLibrary)
 
         projectionMatrix = createProjectionMatrix()
-        worldMatrix = createWorldMatrix()
+        cameraMatrix = createCameraMatrix()
 
         commandQueue = device.newCommandQueue()
         commandQueue.label = "main command queue"
@@ -141,15 +192,22 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
     func createProjectionMatrix() -> GLKMatrix4 {
         let fovyRadians: Float = Float(M_PI * 0.66)
         let aspectRatio: Float = Float(CGRectGetWidth(self.view.frame) / CGRectGetHeight(self.view.frame))
-        let nearZ: Float = 0.1
+        let nearZ: Float = 0.01
         let farZ: Float = 100.0
         return GLKMatrix4MakePerspective(fovyRadians, aspectRatio, nearZ, farZ)
     }
 
-    func createWorldMatrix() -> GLKMatrix4 {
-        var matrix = GLKMatrix4New()
-        matrix = GLKMatrix4RotateY(matrix, Float(-M_PI_2/10))
-        return matrix;
+    func createViewPort() -> MTLViewport {
+        return MTLViewport(originX: 0.0,
+                           originY: 0.0,
+                           width: Double(CGRectGetWidth(self.view.frame)) * 2,
+                           height: Double(CGRectGetHeight(self.view.frame)) * 2,
+                           znear: 0.01,
+                           zfar: 100.0)
+    }
+
+    func createCameraMatrix() -> GLKMatrix4 {
+        return GLKMatrix4New()
     }
 
     func createRenderingPipelineWithVertexShader(vertexShaderName: String, fragmentShaderName: String,  library: MTLLibrary) -> MTLRenderPipelineState? {
@@ -171,7 +229,6 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
     }
 
     func drawInMTKView(view: MTKView) {
-        
         let metalView = self.view as! MTKView
         let drawable = metalView.currentDrawable!
         
@@ -183,8 +240,14 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
         let commandBuffer = commandQueue.commandBuffer()
 
         let renderCommandEncoder = commandBuffer.renderCommandEncoderWithDescriptor(renderPassDescriptor)
+        renderCommandEncoder.setViewport(createViewPort())
         renderTriangle(redTriangle, renderPipelineState: defaultPipelineState, renderCommandEncoder: renderCommandEncoder)
         renderTriangle(greenTriangle, renderPipelineState: blackAndWhitePipelineState, renderCommandEncoder: renderCommandEncoder)
+
+        for gameObject in gameObjects {
+            renderGameObject(gameObject, renderPipelineState: defaultPipelineState, renderCommandEncoder: renderCommandEncoder)
+        }
+
         renderCommandEncoder.endEncoding()
 
         commandBuffer.presentDrawable(drawable)
@@ -194,13 +257,20 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
     func renderTriangle(triangle: Triangle, renderPipelineState: MTLRenderPipelineState, renderCommandEncoder: MTLRenderCommandEncoder) {
         renderCommandEncoder.setRenderPipelineState(renderPipelineState)
         renderCommandEncoder.setVertexBuffer(triangle.vertexBuffer, offset: 0, atIndex: 0)
-        renderCommandEncoder.setVertexBuffer(createUniformMatrixFor(triangle), offset: 0, atIndex: 1)
+        renderCommandEncoder.setVertexBuffer(createUniformMatrixFor(triangle.modelMatrix()), offset: 0, atIndex: 1)
         renderCommandEncoder.drawPrimitives(.Triangle, vertexStart: 0, vertexCount: triangle.vertexCount, instanceCount: 1)
     }
 
-    func createUniformMatrixFor(triangle: Triangle) -> MTLBuffer {
-        let modelMatrix = triangle.modelMatrix()
-        let transformedModelMatrix = GLKMatrix4Multiply(worldMatrix, modelMatrix)
+    func renderGameObject(gameObject: GameObject, renderPipelineState: MTLRenderPipelineState, renderCommandEncoder: MTLRenderCommandEncoder) {
+        renderCommandEncoder.setRenderPipelineState(renderPipelineState)
+        renderCommandEncoder.setVertexBuffer(gameObject.renderable.vertexBuffer, offset: 0, atIndex: 0)
+
+        renderCommandEncoder.setVertexBuffer(createUniformMatrixFor(testP.modelMatrix()), offset: 0, atIndex: 1)
+        renderCommandEncoder.drawPrimitives(.Triangle, vertexStart: 0, vertexCount: gameObject.renderable.vertexCount, instanceCount: 1)
+    }
+
+    func createUniformMatrixFor(modelMatrix: GLKMatrix4) -> MTLBuffer {
+        let transformedModelMatrix = GLKMatrix4Multiply(cameraMatrix, modelMatrix)
 
         let sizeOfMatrix4x4 = 16
         let sizeOfSingleMatrix = sizeof(Float) * sizeOfMatrix4x4
