@@ -174,21 +174,13 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
         }
 
         switch keyCode {
-        case .A:
-            fallthrough
-        case .LeftArrow:
+        case .A, .LeftArrow:
             redTriangle.position = GLKVector3Add(redTriangle.position, GLKVector3Make(0.1, 0.0, 0.0))
-        case .D:
-            fallthrough
-        case .RightArrow:
+        case .D, .RightArrow:
             redTriangle.position = GLKVector3Add(redTriangle.position, GLKVector3Make(-0.1, 0.0, 0.0))
-        case .W:
-            fallthrough
-        case .UpArrow:
+        case .W, .UpArrow:
             redTriangle.position = GLKVector3Add(redTriangle.position, GLKVector3Make(0.0, 0.0, -0.01))
-        case .S:
-            fallthrough
-        case .DownArrow:
+        case .S, .DownArrow:
             redTriangle.position = GLKVector3Add(redTriangle.position, GLKVector3Make(0.0, 0.0, 0.01))
         default:
             print("nothing")
