@@ -47,10 +47,10 @@ class Node {
 }
 
 class Triangle: Node {
-    init(_ device: MTLDevice, position: GLKVector3, color: GLKVector3) {
+    init(_ device: MTLDevice, name: String, position: GLKVector3, color: GLKVector3) {
         let V0 = Vertex(position: GLKVector3Make(-0.2, -0.2, 0.0),   color: GLKVector4MakeWithVector3(color, 1.0))
         let V1 = Vertex(position: GLKVector3Make( 0.0,  0.0, 0.0),   color: GLKVector4MakeWithVector3(color, 1.0))
         let V2 = Vertex(position: GLKVector3Make( 0.2,  -0.2, 0.0),  color: GLKVector4MakeWithVector3(color, 1.0))
-        super.init(name: "Triangle", vertices: [V0, V1, V2], device: device, position: position)
+        super.init(name: name, vertices: [V0, V1, V2], device: device, position: position)
     }
 }

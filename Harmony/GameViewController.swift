@@ -14,7 +14,7 @@ class InputView: MTKView {
     required init(coder: NSCoder) {
         super.init(coder: coder)
         
-//        paused = true
+//  var   paused = true
 //        enableSetNeedsDisplay = false
 
         Swift.print("init with coder")
@@ -42,9 +42,9 @@ class GameViewController: NSViewController, MTKViewDelegate {
     var device: MTLDevice!
     
     var commandQueue: MTLCommandQueue!
-    var pipelineState: MTLRenderPipelineState!
+    var defaultPipelineState: MTLRenderPipelineState!
+    var blackAndWhitePipelineState: MTLRenderPipelineState!
     var vertexBuffer: MTLBuffer!
-//    var uniformBuffer: MTLBuffer!
     var projectionMatrix: GLKMatrix4!
 
     var redTriangle: Triangle!
@@ -71,23 +71,13 @@ class GameViewController: NSViewController, MTKViewDelegate {
     }
     
     func loadAssets() {
-        redTriangle = Triangle(device, position: GLKVector3Make(0.5, 0.0, -5.0), color: GLKVector3Make(0.8, 0.1, 0.1))
-        greenTriangle = Triangle(device, position: GLKVector3Make(-0.5, 0.0, -2.0), color: GLKVector3Make(0.1, 0.8, 0.1))
+        redTriangle = Triangle(device, name: "red", position: GLKVector3Make(0.5, 0.0, -0.5), color: GLKVector3Make(0.8, 0.1, 0.1))
+        greenTriangle = Triangle(device, name: "green", position: GLKVector3Make(-0.5, 0.0, -1.0), color: GLKVector3Make(0.1, 0.8, 0.1))
 
         let defaultLibrary = device.newDefaultLibrary()!
-        let fragmentProgram = defaultLibrary.newFunctionWithName("basic_fragment")!
-        let vertexProgram = defaultLibrary.newFunctionWithName("basic_vertex")!
-        
-        let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
-        pipelineStateDescriptor.vertexFunction = vertexProgram
-        pipelineStateDescriptor.fragmentFunction = fragmentProgram
-        pipelineStateDescriptor.colorAttachments[0].pixelFormat = MTLPixelFormat.BGRA8Unorm
-        
-        do {
-            try pipelineState = device.newRenderPipelineStateWithDescriptor(pipelineStateDescriptor)
-        } catch let error {
-            print("Failed to create pipeline state, error \(error)")
-        }
+        defaultPipelineState = createRenderingPipelineWithVertexShader("basic_vertex", fragmentShaderName: "basic_fragment", library: defaultLibrary)
+        blackAndWhitePipelineState = createRenderingPipelineWithVertexShader("basic_vertex", fragmentShaderName: "bw_fragment", library: defaultLibrary)
+
 
         let fovyRadians: Float = Float(M_PI * 0.66)
         let aspectRatio: Float = Float(CGRectGetWidth(self.view.frame) / CGRectGetHeight(self.view.frame))
@@ -98,7 +88,25 @@ class GameViewController: NSViewController, MTKViewDelegate {
         commandQueue = device.newCommandQueue()
         commandQueue.label = "main command queue"
     }
-    
+
+    func createRenderingPipelineWithVertexShader(vertexShaderName: String, fragmentShaderName: String,  library: MTLLibrary) -> MTLRenderPipelineState? {
+        let vertexProgram = library.newFunctionWithName(vertexShaderName)!
+        let fragmentProgram = library.newFunctionWithName(fragmentShaderName)!
+
+        let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
+        pipelineStateDescriptor.vertexFunction = vertexProgram
+        pipelineStateDescriptor.fragmentFunction = fragmentProgram
+        pipelineStateDescriptor.colorAttachments[0].pixelFormat = MTLPixelFormat.BGRA8Unorm
+
+        do {
+            let newPipelineState = try device.newRenderPipelineStateWithDescriptor(pipelineStateDescriptor)
+            return newPipelineState
+        } catch let error {
+            print("Failed to create pipeline state, error \(error)")
+            return nil
+        }
+    }
+
     func drawInMTKView(view: MTKView) {
         
         let metalView = self.view as! MTKView
@@ -112,16 +120,16 @@ class GameViewController: NSViewController, MTKViewDelegate {
         let commandBuffer = commandQueue.commandBuffer()
 
         let renderCommandEncoder = commandBuffer.renderCommandEncoderWithDescriptor(renderPassDescriptor)
-        renderCommandEncoder.setRenderPipelineState(pipelineState)
-        renderTriangle(redTriangle, renderCommandEncoder: renderCommandEncoder)
-        renderTriangle(greenTriangle, renderCommandEncoder: renderCommandEncoder)
+        renderTriangle(redTriangle, renderPipelineState: defaultPipelineState, renderCommandEncoder: renderCommandEncoder)
+        renderTriangle(greenTriangle, renderPipelineState: blackAndWhitePipelineState, renderCommandEncoder: renderCommandEncoder)
         renderCommandEncoder.endEncoding()
 
         commandBuffer.presentDrawable(drawable)
         commandBuffer.commit()
     }
 
-    func renderTriangle(triangle: Triangle, renderCommandEncoder: MTLRenderCommandEncoder) {
+    func renderTriangle(triangle: Triangle, renderPipelineState: MTLRenderPipelineState, renderCommandEncoder: MTLRenderCommandEncoder) {
+        renderCommandEncoder.setRenderPipelineState(renderPipelineState)
         renderCommandEncoder.setVertexBuffer(triangle.vertexBuffer, offset: 0, atIndex: 0)
         renderCommandEncoder.setVertexBuffer(createUniformMatrixFor(triangle), offset: 0, atIndex: 1)
         renderCommandEncoder.drawPrimitives(.Triangle, vertexStart: 0, vertexCount: triangle.vertexCount, instanceCount: 1)

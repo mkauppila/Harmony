@@ -33,13 +33,15 @@ vertex VertexOut basic_vertex(const device VertexIn *vertexArray [[ buffer(0) ]]
         .position = uniforms->projectionMatrix * uniforms->modelMatrix * float4(vertexIn.position, 1),
         .color = vertexIn.color
     };
-//    vertexOut.position = uniforms->projectionMatrix * uniforms->modelMatrix * float4(vertexIn.position, 1);
-//    vertexOut.color = vertexIn.color;
     return vertexOut;
 }
 
 fragment float4 basic_fragment(const VertexOut vertexOut) {
     return vertexOut.color;
+}
+
+fragment float4 bw_fragment(const VertexOut vertexOut) {
+    return float4(0.5, 0.5, 0.5, 1.0);
 }
 
 
