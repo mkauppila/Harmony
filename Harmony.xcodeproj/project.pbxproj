@@ -13,6 +13,8 @@
 		47D3BFA91D15324300131B89 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 47D3BFA81D15324300131B89 /* Assets.xcassets */; };
 		47D3BFAC1D15324300131B89 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 47D3BFAA1D15324300131B89 /* MainMenu.xib */; };
 		47D3BFB71D15324300131B89 /* HarmonyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFB61D15324300131B89 /* HarmonyTests.swift */; };
+		47D3BFC21D16B0DE00131B89 /* Vertex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFC11D16B0DE00131B89 /* Vertex.swift */; };
+		47D3BFC41D16BEF000131B89 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFC31D16BEF000131B89 /* Node.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +38,8 @@
 		47D3BFB21D15324300131B89 /* HarmonyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HarmonyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		47D3BFB61D15324300131B89 /* HarmonyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarmonyTests.swift; sourceTree = "<group>"; };
 		47D3BFB81D15324300131B89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		47D3BFC11D16B0DE00131B89 /* Vertex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vertex.swift; sourceTree = "<group>"; };
+		47D3BFC31D16BEF000131B89 /* Node.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +87,8 @@
 				47D3BFA81D15324300131B89 /* Assets.xcassets */,
 				47D3BFAA1D15324300131B89 /* MainMenu.xib */,
 				47D3BFAD1D15324300131B89 /* Info.plist */,
+				47D3BFC11D16B0DE00131B89 /* Vertex.swift */,
+				47D3BFC31D16BEF000131B89 /* Node.swift */,
 			);
 			path = Harmony;
 			sourceTree = "<group>";
@@ -197,6 +203,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				47D3BFA71D15324300131B89 /* Shaders.metal in Sources */,
+				47D3BFC41D16BEF000131B89 /* Node.swift in Sources */,
+				47D3BFC21D16B0DE00131B89 /* Vertex.swift in Sources */,
 				47D3BFA51D15324300131B89 /* GameViewController.swift in Sources */,
 				47D3BFA31D15324300131B89 /* AppDelegate.swift in Sources */,
 			);
