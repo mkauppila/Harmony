@@ -9,6 +9,12 @@
 import MetalKit
 import GLKit
 
+func GLKMatrix4New() -> GLKMatrix4 {
+    var matrix = GLKMatrix4()
+    matrix = GLKMatrix4Identity
+    return matrix
+}
+
 class Node {
     let name: String
     var vertexCount: Int
@@ -16,7 +22,7 @@ class Node {
     var device: MTLDevice
 
     let position: GLKVector3
-    
+
     init(name: String, vertices: [Vertex], device: MTLDevice, position: GLKVector3) {
         var vertexData = [Float]()
         for vertex in vertices {
@@ -34,11 +40,8 @@ class Node {
     }
 
     func modelMatrix() -> GLKMatrix4 {
-        var matrix = GLKMatrix4()
-        matrix = GLKMatrix4Identity
-        matrix = GLKMatrix4Translate(matrix, position.x, position.y, position.y)
-        matrix = GLKMatrix4Scale(matrix, 1.0, 0.5, 1.0)
-        print("model matrix: \(NSStringFromGLKMatrix4(matrix))")
+        var matrix = GLKMatrix4New()
+        matrix = GLKMatrix4Translate(matrix, position.x, position.y, position.z)
         return matrix
     }
 }

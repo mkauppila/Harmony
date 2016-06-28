@@ -45,6 +45,7 @@ class GameViewController: NSViewController, MTKViewDelegate {
     var pipelineState: MTLRenderPipelineState!
     var vertexBuffer: MTLBuffer!
 //    var uniformBuffer: MTLBuffer!
+    var projectionMatrix: GLKMatrix4!
 
     var redTriangle: Triangle!
     var greenTriangle: Triangle!
@@ -70,8 +71,8 @@ class GameViewController: NSViewController, MTKViewDelegate {
     }
     
     func loadAssets() {
-        redTriangle = Triangle(device, position: GLKVector3Make(0.5, 0.0, 0.0), color: GLKVector3Make(0.8, 0.1, 0.1))
-        greenTriangle = Triangle(device, position: GLKVector3Make(-0.5, 0.0, 0.0), color: GLKVector3Make(0.1, 0.8, 0.1))
+        redTriangle = Triangle(device, position: GLKVector3Make(0.5, 0.0, -5.0), color: GLKVector3Make(0.8, 0.1, 0.1))
+        greenTriangle = Triangle(device, position: GLKVector3Make(-0.5, 0.0, -2.0), color: GLKVector3Make(0.1, 0.8, 0.1))
 
         let defaultLibrary = device.newDefaultLibrary()!
         let fragmentProgram = defaultLibrary.newFunctionWithName("basic_fragment")!
@@ -87,7 +88,13 @@ class GameViewController: NSViewController, MTKViewDelegate {
         } catch let error {
             print("Failed to create pipeline state, error \(error)")
         }
-        
+
+        let fovyRadians: Float = Float(M_PI * 0.66)
+        let aspectRatio: Float = Float(CGRectGetWidth(self.view.frame) / CGRectGetHeight(self.view.frame))
+        let nearZ: Float = 0.1
+        let farZ: Float = 100.0
+        projectionMatrix = GLKMatrix4MakePerspective(fovyRadians, aspectRatio, nearZ, farZ)
+
         commandQueue = device.newCommandQueue()
         commandQueue.label = "main command queue"
     }
@@ -123,10 +130,14 @@ class GameViewController: NSViewController, MTKViewDelegate {
     func createUniformMatrixFor(triangle: Triangle) -> MTLBuffer {
         let matrix = triangle.modelMatrix()
         let sizeOfMatrix4x4 = 16
-        let sizeOfUniformBuffer = sizeof(Float) * sizeOfMatrix4x4
+
+        let sizeOfSingleMatrix = sizeof(Float) * sizeOfMatrix4x4
+        let sizeOfUniformBuffer = sizeOfSingleMatrix * 2
+
         let uniformBuffer = device.newBufferWithLength(sizeOfUniformBuffer, options: MTLResourceOptions.CPUCacheModeDefaultCache)
         let uniformContents = uniformBuffer.contents()
-        memcpy(uniformContents, GLKMatrix4ToUnsafePointer(matrix), sizeOfUniformBuffer)
+        memcpy(uniformContents, GLKMatrix4ToUnsafePointer(matrix), sizeOfSingleMatrix)
+        memcpy(uniformContents + sizeOfSingleMatrix, GLKMatrix4ToUnsafePointer(self.projectionMatrix), sizeOfSingleMatrix)
         return uniformBuffer
     }
     
