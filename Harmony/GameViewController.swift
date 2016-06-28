@@ -39,9 +39,6 @@ class InputView: MTKView {
     }
 }
 
-func GLKMatrix4ToUnsafePointer(matrix: GLKMatrix4) -> UnsafePointer<Float> {
-    let a = Array(arrayLiteral: matrix.m)
-    return UnsafePointer<Float>(a)
 enum KeyCode: UInt16 {
     case A = 0
     case D = 2
