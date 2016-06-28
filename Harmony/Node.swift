@@ -14,8 +14,10 @@ class Node {
     var vertexCount: Int
     var vertexBuffer: MTLBuffer
     var device: MTLDevice
+
+    let position: GLKVector3
     
-    init(name: String, vertices: [Vertex], device: MTLDevice) {
+    init(name: String, vertices: [Vertex], device: MTLDevice, position: GLKVector3) {
         var vertexData = [Float]()
         for vertex in vertices {
             vertexData += vertex.floatBuffer()
@@ -26,30 +28,26 @@ class Node {
         
         self.name = name
         self.device = device
+        self.position = position
+        
         vertexCount = vertices.count
+    }
+
+    func modelMatrix() -> GLKMatrix4 {
+        var matrix = GLKMatrix4()
+        matrix = GLKMatrix4Identity
+        matrix = GLKMatrix4Translate(matrix, position.x, position.y, position.y)
+        matrix = GLKMatrix4Scale(matrix, 1.0, 0.5, 1.0)
+        print("model matrix: \(NSStringFromGLKMatrix4(matrix))")
+        return matrix
     }
 }
 
-
-//let vertexData:[Float] =
-//    [
-//        -0.2, -0.2, 0.0,
-//        0.0, 0.0, 0.0,
-//        0.2, -0.2, 0.0
-//]
-//
-//let colorData: [Float] = [
-//    1.0, 1.0, 1.0,
-//    1.0, 1.0, 1.0,
-//    1.0, 1.0, 1.0
-//]
-
-
 class Triangle: Node {
-    init(_ device: MTLDevice) {
-        let V0 = Vertex(position: GLKVector3Make(-0.2, -0.2, 0.0),   color: GLKVector4Make(1.0, 0.0, 0.0, 1.0))
-        let V1 = Vertex(position: GLKVector3Make( 0.0,  0.0, 0.0),   color: GLKVector4Make(0.0, 1.0, 0.0, 1.0))
-        let V2 = Vertex(position: GLKVector3Make( 0.2,  -0.2, 0.0),  color: GLKVector4Make(1.0, 0.0, 1.0, 1.0))
-        super.init(name: "Triangle", vertices: [V0, V1, V2], device: device)
+    init(_ device: MTLDevice, position: GLKVector3, color: GLKVector3) {
+        let V0 = Vertex(position: GLKVector3Make(-0.2, -0.2, 0.0),   color: GLKVector4MakeWithVector3(color, 1.0))
+        let V1 = Vertex(position: GLKVector3Make( 0.0,  0.0, 0.0),   color: GLKVector4MakeWithVector3(color, 1.0))
+        let V2 = Vertex(position: GLKVector3Make( 0.2,  -0.2, 0.0),  color: GLKVector4MakeWithVector3(color, 1.0))
+        super.init(name: "Triangle", vertices: [V0, V1, V2], device: device, position: position)
     }
 }

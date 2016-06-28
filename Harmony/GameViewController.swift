@@ -8,6 +8,7 @@
 
 import Cocoa
 import MetalKit
+import GLKit
 
 class InputView: MTKView {
     required init(coder: NSCoder) {
@@ -31,16 +32,23 @@ class InputView: MTKView {
     }
 }
 
+func GLKMatrix4ToUnsafePointer(matrix: GLKMatrix4) -> UnsafePointer<Float> {
+    let a = Array(arrayLiteral: matrix.m)
+    return UnsafePointer<Float>(a)
+}
+
 class GameViewController: NSViewController, MTKViewDelegate {
     
-    var device: MTLDevice! = nil
+    var device: MTLDevice!
     
-    var commandQueue: MTLCommandQueue! = nil
-    var pipelineState: MTLRenderPipelineState! = nil
-    var vertexBuffer: MTLBuffer! = nil
-    
-    var triangle: Triangle?
-    
+    var commandQueue: MTLCommandQueue!
+    var pipelineState: MTLRenderPipelineState!
+    var vertexBuffer: MTLBuffer!
+//    var uniformBuffer: MTLBuffer!
+
+    var redTriangle: Triangle!
+    var greenTriangle: Triangle!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -62,8 +70,9 @@ class GameViewController: NSViewController, MTKViewDelegate {
     }
     
     func loadAssets() {
-        triangle = Triangle(device)
-        
+        redTriangle = Triangle(device, position: GLKVector3Make(0.5, 0.0, 0.0), color: GLKVector3Make(0.8, 0.1, 0.1))
+        greenTriangle = Triangle(device, position: GLKVector3Make(-0.5, 0.0, 0.0), color: GLKVector3Make(0.1, 0.8, 0.1))
+
         let defaultLibrary = device.newDefaultLibrary()!
         let fragmentProgram = defaultLibrary.newFunctionWithName("basic_fragment")!
         let vertexProgram = defaultLibrary.newFunctionWithName("basic_vertex")!
@@ -91,20 +100,34 @@ class GameViewController: NSViewController, MTKViewDelegate {
         let renderPassDescriptor = MTLRenderPassDescriptor()
         renderPassDescriptor.colorAttachments[0].texture = drawable.texture
         renderPassDescriptor.colorAttachments[0].loadAction = .Clear
-//        renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(red: 1.0, green: 0.2, blue: 0.2, alpha: 1.0)
-        
+        renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+
         let commandBuffer = commandQueue.commandBuffer()
-        
+
         let renderCommandEncoder = commandBuffer.renderCommandEncoderWithDescriptor(renderPassDescriptor)
         renderCommandEncoder.setRenderPipelineState(pipelineState)
-        
-        renderCommandEncoder.setVertexBuffer(triangle!.vertexBuffer, offset: 0, atIndex: 0)
-        renderCommandEncoder.drawPrimitives(.Triangle, vertexStart: 0, vertexCount: triangle!.vertexCount, instanceCount: 1)
-//        renderCommandEncoder.setViewport(MTLViewport(originX: 0.0, originY: 0.0, width: 100, height: 600, znear: 0.0, zfar: 1.0))
+        renderTriangle(redTriangle, renderCommandEncoder: renderCommandEncoder)
+        renderTriangle(greenTriangle, renderCommandEncoder: renderCommandEncoder)
         renderCommandEncoder.endEncoding()
-        
+
         commandBuffer.presentDrawable(drawable)
         commandBuffer.commit()
+    }
+
+    func renderTriangle(triangle: Triangle, renderCommandEncoder: MTLRenderCommandEncoder) {
+        renderCommandEncoder.setVertexBuffer(triangle.vertexBuffer, offset: 0, atIndex: 0)
+        renderCommandEncoder.setVertexBuffer(createUniformMatrixFor(triangle), offset: 0, atIndex: 1)
+        renderCommandEncoder.drawPrimitives(.Triangle, vertexStart: 0, vertexCount: triangle.vertexCount, instanceCount: 1)
+    }
+
+    func createUniformMatrixFor(triangle: Triangle) -> MTLBuffer {
+        let matrix = triangle.modelMatrix()
+        let sizeOfMatrix4x4 = 16
+        let sizeOfUniformBuffer = sizeof(Float) * sizeOfMatrix4x4
+        let uniformBuffer = device.newBufferWithLength(sizeOfUniformBuffer, options: MTLResourceOptions.CPUCacheModeDefaultCache)
+        let uniformContents = uniformBuffer.contents()
+        memcpy(uniformContents, GLKMatrix4ToUnsafePointer(matrix), sizeOfUniformBuffer)
+        return uniformBuffer
     }
     
     func mtkView(view: MTKView, drawableSizeWillChange size: CGSize) {

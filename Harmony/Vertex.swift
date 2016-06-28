@@ -15,6 +15,6 @@ struct Vertex {
     let color: GLKVector4
     
     func floatBuffer() -> [Float] {
-        return [position.x, position.y, position.z];//, color.r, color.g, color.b]
+        return [position.x, position.y, position.z, color.r, color.g, color.b, color.a]
     }
 }

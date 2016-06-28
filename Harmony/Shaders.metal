@@ -10,13 +10,32 @@
 
 using namespace metal;
 
-fragment half4 basic_fragment() {
-    return half4(1.0);
+struct VertexIn {
+    packed_float3 position;
+    packed_float4 color;
+};
+
+struct Uniforms {
+    float4x4 modelMatrix;
+};
+
+struct VertexOut {
+    float4 position [[position]];
+    float4 color;
+};
+
+vertex VertexOut basic_vertex(const device VertexIn *vertexArray [[ buffer(0) ]],
+                              const device Uniforms *uniforms [[ buffer(1) ]],
+                              unsigned int vid [[ vertex_id ]]) {
+    VertexIn vertexIn = vertexArray[vid];
+    VertexOut vertexOut;
+    vertexOut.position = uniforms->modelMatrix * float4(vertexIn.position, 1);
+    vertexOut.color = vertexIn.color;
+    return vertexOut;
 }
 
-vertex float4 basic_vertex(const device packed_float3 *vertex_array [[ buffer(0) ]],
-                           const device packed_float4 *color_array [[buffer(1)]],
-                           unsigned int vid [[ vertex_id ]]) {
-    return float4(vertex_array[vid], 1.0);
+fragment float4 basic_fragment(const VertexOut vertexOut) {
+    return vertexOut.color;
 }
+
 
