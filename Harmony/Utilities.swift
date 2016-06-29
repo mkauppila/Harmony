@@ -16,7 +16,6 @@ func GLKMatrix4New() -> GLKMatrix4 {
 }
 
 func GLKMatrix4ToUnsafePointer(matrix: GLKMatrix4) -> UnsafePointer<Float> {
-    let a = Array(arrayLiteral: matrix.m)
-    return UnsafePointer<Float>(a)
+    return UnsafePointer<Float>(Array(arrayLiteral: matrix.m))
 }
 

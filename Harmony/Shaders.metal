@@ -51,8 +51,6 @@ fragment float4 bw_fragment(const VertexOut vertexOut) {
     } else {
         return float4(0.5, 0.5, 0.5, 1.0);
     }
-
-//    return float4(0.5, 0.5, 0.5, 1.0);
 }
 
 

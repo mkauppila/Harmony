@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		4725A0CA1D22DCC60019D20F /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4725A0C91D22DCC60019D20F /* Utilities.swift */; };
+		4725A0CC1D23B56C0019D20F /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4725A0CB1D23B56C0019D20F /* Models.swift */; };
+		4725A0CE1D23B61E0019D20F /* ComponentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4725A0CD1D23B61E0019D20F /* ComponentStore.swift */; };
 		47D3BFA31D15324300131B89 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFA21D15324300131B89 /* AppDelegate.swift */; };
 		47D3BFA51D15324300131B89 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFA41D15324300131B89 /* GameViewController.swift */; };
 		47D3BFA71D15324300131B89 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFA61D15324300131B89 /* Shaders.metal */; };
@@ -15,7 +17,7 @@
 		47D3BFAC1D15324300131B89 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 47D3BFAA1D15324300131B89 /* MainMenu.xib */; };
 		47D3BFB71D15324300131B89 /* HarmonyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFB61D15324300131B89 /* HarmonyTests.swift */; };
 		47D3BFC21D16B0DE00131B89 /* Vertex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFC11D16B0DE00131B89 /* Vertex.swift */; };
-		47D3BFC41D16BEF000131B89 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFC31D16BEF000131B89 /* Node.swift */; };
+		47D3BFC41D16BEF000131B89 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFC31D16BEF000131B89 /* Components.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,6 +32,8 @@
 
 /* Begin PBXFileReference section */
 		4725A0C91D22DCC60019D20F /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		4725A0CB1D23B56C0019D20F /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		4725A0CD1D23B61E0019D20F /* ComponentStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComponentStore.swift; sourceTree = "<group>"; };
 		47D3BF9F1D15324300131B89 /* Harmony.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Harmony.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		47D3BFA21D15324300131B89 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		47D3BFA41D15324300131B89 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
@@ -41,7 +45,7 @@
 		47D3BFB61D15324300131B89 /* HarmonyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarmonyTests.swift; sourceTree = "<group>"; };
 		47D3BFB81D15324300131B89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		47D3BFC11D16B0DE00131B89 /* Vertex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vertex.swift; sourceTree = "<group>"; };
-		47D3BFC31D16BEF000131B89 /* Node.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
+		47D3BFC31D16BEF000131B89 /* Components.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,13 +89,15 @@
 			children = (
 				47D3BFA21D15324300131B89 /* AppDelegate.swift */,
 				47D3BFA41D15324300131B89 /* GameViewController.swift */,
+				4725A0CD1D23B61E0019D20F /* ComponentStore.swift */,
+				47D3BFC31D16BEF000131B89 /* Components.swift */,
+				4725A0C91D22DCC60019D20F /* Utilities.swift */,
+				4725A0CB1D23B56C0019D20F /* Models.swift */,
+				47D3BFC11D16B0DE00131B89 /* Vertex.swift */,
 				47D3BFA61D15324300131B89 /* Shaders.metal */,
 				47D3BFA81D15324300131B89 /* Assets.xcassets */,
 				47D3BFAA1D15324300131B89 /* MainMenu.xib */,
 				47D3BFAD1D15324300131B89 /* Info.plist */,
-				47D3BFC11D16B0DE00131B89 /* Vertex.swift */,
-				47D3BFC31D16BEF000131B89 /* Node.swift */,
-				4725A0C91D22DCC60019D20F /* Utilities.swift */,
 			);
 			path = Harmony;
 			sourceTree = "<group>";
@@ -207,10 +213,12 @@
 			files = (
 				4725A0CA1D22DCC60019D20F /* Utilities.swift in Sources */,
 				47D3BFA71D15324300131B89 /* Shaders.metal in Sources */,
-				47D3BFC41D16BEF000131B89 /* Node.swift in Sources */,
+				4725A0CE1D23B61E0019D20F /* ComponentStore.swift in Sources */,
+				47D3BFC41D16BEF000131B89 /* Components.swift in Sources */,
 				47D3BFC21D16B0DE00131B89 /* Vertex.swift in Sources */,
 				47D3BFA51D15324300131B89 /* GameViewController.swift in Sources */,
 				47D3BFA31D15324300131B89 /* AppDelegate.swift in Sources */,
+				4725A0CC1D23B56C0019D20F /* Models.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -396,6 +404,7 @@
 				47D3BFBD1D15324300131B89 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		47D3BFBE1D15324300131B89 /* Build configuration list for PBXNativeTarget "HarmonyTests" */ = {
 			isa = XCConfigurationList;
@@ -404,6 +413,7 @@
 				47D3BFC01D15324300131B89 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

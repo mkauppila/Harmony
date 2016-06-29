@@ -10,34 +10,7 @@ import Cocoa
 import MetalKit
 import GLKit
 
-protocol KeyboardInputDelegate {
-    func keyUp(event: NSEvent)
-    func keyDown(event: NSEvent)
-}
-
-class InputView: MTKView {
-    var inputDelegate: KeyboardInputDelegate?
-
-    required init(coder: NSCoder) {
-        super.init(coder: coder)
-        
-//  var   paused = true
-//        enableSetNeedsDisplay = false
-
-        Swift.print("init with coder")
-    }
-    
-    override func keyUp(theEvent: NSEvent) {
-        inputDelegate?.keyUp(theEvent)
-    }
-    override func keyDown(theEvent: NSEvent) {
-        inputDelegate?.keyDown(theEvent)
-    }
-
-    override var acceptsFirstResponder: Bool {
-        return true
-    }
-}
+let playerObjectId = 0
 
 enum KeyCode: UInt16 {
     case A = 0
@@ -53,69 +26,30 @@ enum KeyCode: UInt16 {
     case RightArrow = 124
 }
 
-// This is very nicely unit testable
-struct EntityComponentStore {
-    var renderables: [UInt: Renderable]
-    var physicals: [UInt: Physical]
-
-    init() {
-        renderables = [UInt: Renderable]()
-        physicals = [UInt: Physical]()
-    }
-
-    mutating func addComponentForObjectId<T: Component>(component: T, objectId: UInt) {
-        switch T.self {
-        case is Renderable.Type:
-            renderables[objectId] = component as? Renderable
-        case is Physical.Type:
-            physicals[objectId] = component as? Physical
-        default:
-            break
-        }
-    }
-
-    mutating func removeComponentForObjectId<T: Component>(component: T, objectId: UInt) {
-        switch T.self {
-        case is Renderable.Type:
-            renderables.removeValueForKey(objectId)
-        case is Physical.Type:
-            physicals.removeValueForKey(objectId)
-        default:
-            break
-        }
-    }
-
-    func allComponentsOfType<T: Component>() -> [T] {
-        switch T.self {
-        case is Renderable.Type:
-            return renderables.map({ (_, renderable) -> T in
-                return renderable as! T
-            })
-        case is Physical.Type:
-            return physicals.map({ (_, physical) -> T in
-                return physicals as! T
-            })
-        default:
-            return []
-        }
-    }
-
-    func findComponentForObjectId<T: Component>(objectId: UInt) -> T? {
-        switch T.self {
-        case is Renderable.Type:
-            return renderables[objectId] as? T
-        case is Physical.Type:
-            return physicals[objectId] as? T
-        default:
-            return nil
-        }
-    }
+protocol KeyboardInputDelegate {
+    func keyUp(event: NSEvent)
+    func keyDown(event: NSEvent)
 }
 
-struct GameObject {
-    let objectId: Int
-    let renderable: Renderable
-    let physical: Physical
+class GameView: MTKView {
+    var inputDelegate: KeyboardInputDelegate?
+
+    required init(coder: NSCoder) {
+        super.init(coder: coder)
+//      paused = true
+//      enableSetNeedsDisplay = false
+    }
+    
+    override func keyUp(theEvent: NSEvent) {
+        inputDelegate?.keyUp(theEvent)
+    }
+    override func keyDown(theEvent: NSEvent) {
+        inputDelegate?.keyDown(theEvent)
+    }
+
+    override var acceptsFirstResponder: Bool {
+        return true
+    }
 }
 
 class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelegate {
@@ -130,15 +64,7 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
     var projectionMatrix: GLKMatrix4!
     var cameraMatrix: GLKMatrix4!
 
-    var redTriangle: Triangle!
-    var greenTriangle: Triangle!
-
-    var gameObject: GameObject!
-    var test: Renderable!
-    var testP: Physical!
-    var store: EntityComponentStore!
-
-    var gameObjects: [GameObject]!
+    var store: ComponentStore!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -151,7 +77,7 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
         }
 
         // setup view properties
-        let view = self.view as! InputView
+        let view = self.view as! GameView
         view.delegate = self
         view.device = device
         view.sampleCount = 4
@@ -159,8 +85,7 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
 
         view.inputDelegate = self
 
-        store = EntityComponentStore()
-        gameObjects = []
+        store = ComponentStore()
 
         loadAssets()
     }
@@ -171,56 +96,44 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
     override func keyDown(event: NSEvent) {
         guard let keyCode = KeyCode(rawValue: event.keyCode) else {
             print("Not supported keyCode \(event.keyCode)")
-            return;
+            return
         }
 
-        switch keyCode {
-        case .A, .LeftArrow:
-            redTriangle.position = GLKVector3Add(redTriangle.position, GLKVector3Make(0.1, 0.0, 0.0))
-        case .D, .RightArrow:
-            redTriangle.position = GLKVector3Add(redTriangle.position, GLKVector3Make(-0.1, 0.0, 0.0))
-        case .W, .UpArrow:
-            redTriangle.position = GLKVector3Add(redTriangle.position, GLKVector3Make(0.0, 0.0, -0.01))
-        case .S, .DownArrow:
-            redTriangle.position = GLKVector3Add(redTriangle.position, GLKVector3Make(0.0, 0.0, 0.01))
-        default:
-            print("nothing")
-        }
+        if let transform: Transform = store.findComponentForObjectId(playerObjectId) {
+            switch keyCode {
+            case .A, .LeftArrow:
+                transform.position = GLKVector3Add(transform.position, GLKVector3Make(0.1, 0.0, 0.0))
+            case .D, .RightArrow:
+                transform.position = GLKVector3Add(transform.position, GLKVector3Make(-0.1, 0.0, 0.0))
+            case .W, .UpArrow:
+                transform.position = GLKVector3Add(transform.position, GLKVector3Make(0.0, 0.0, -0.01))
+            case .S, .DownArrow:
+                transform.position = GLKVector3Add(transform.position, GLKVector3Make(0.0, 0.0, 0.01))
+            default:
+                break
+            }
 
-        print("model matrix \(NSStringFromGLKVector3(redTriangle.position))")
+            print("position \(NSStringFromGLKVector3(transform.position))")
+        }
     }
     
     func loadAssets() {
-        redTriangle = Triangle(device, name: "red", position: GLKVector3Make(0.5, 0.0, -0.5), color: GLKVector3Make(0.8, 0.1, 0.1))
-        greenTriangle = Triangle(device, name: "green", position: GLKVector3Make(-0.5, 0.0, -1.0), color: GLKVector3Make(0.1, 0.8, 0.1))
-
-        test = Renderable(objectId: 0,
+        let renderable = Renderable(objectId: playerObjectId,
                           vertexBuffer: createVertexBufferFrom(playerShipModel(), device: device),
                           vertexSizeInBytes: Vertex.sizeInBytes())
-        testP = Physical(objectId: 0, position: GLKVector3Make(0, 0.0, -0.5), angleInDegrees: 180);
+        let physical = Transform(objectId: playerObjectId, position: GLKVector3Make(0, 0.0, -0.5), angleInDegrees: 180);
 
-        gameObject = GameObject(objectId: 0, renderable: test, physical: testP)
-//        gameObjects.append(gameObject)
-
-//        store.addRenderable(test, toObjectId: 0)
-        store.addComponentForObjectId(test, objectId: 0)
-        store.addComponentForObjectId(testP, objectId: 0)
-        let v: Renderable = store.findComponentForObjectId(0)!
-        print(v)
-        let vv: Physical = store.findComponentForObjectId(0)!
-        print(vv)
-//        store.removeComponentForObjectId(test, objectId: 0)
-
-        let a: [Renderable] = store.allComponentsOfType()
-        print(a)
-
-//        let vvv: Renderable = store.findComponentForObjectId(0)!
-//        print(vvv)
+        store.addComponentForObjectId(renderable, objectId: playerObjectId)
+        store.addComponentForObjectId(physical, objectId: playerObjectId)
 
 
         let defaultLibrary = device.newDefaultLibrary()!
-        defaultPipelineState = createRenderingPipelineWithVertexShader("basic_vertex", fragmentShaderName: "basic_fragment", library: defaultLibrary)
-        blackAndWhitePipelineState = createRenderingPipelineWithVertexShader("basic_vertex", fragmentShaderName: "bw_fragment", library: defaultLibrary)
+        defaultPipelineState = createRenderingPipelineWithVertexShader("basic_vertex",
+                                                                       fragmentShaderName: "basic_fragment",
+                                                                       library: defaultLibrary)
+        blackAndWhitePipelineState = createRenderingPipelineWithVertexShader("basic_vertex",
+                                                                             fragmentShaderName: "bw_fragment",
+                                                                             library: defaultLibrary)
 
         projectionMatrix = createProjectionMatrix()
         cameraMatrix = createCameraMatrix()
@@ -281,8 +194,6 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
 
         let renderCommandEncoder = commandBuffer.renderCommandEncoderWithDescriptor(renderPassDescriptor)
         renderCommandEncoder.setViewport(createViewPort())
-        renderTriangle(redTriangle, renderPipelineState: defaultPipelineState, renderCommandEncoder: renderCommandEncoder)
-        renderTriangle(greenTriangle, renderPipelineState: blackAndWhitePipelineState, renderCommandEncoder: renderCommandEncoder)
 
         let allRenderables: [Renderable] = store.allComponentsOfType()
         for renderable in allRenderables  {
@@ -297,34 +208,33 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
         commandBuffer.commit()
     }
 
-    func renderTriangle(triangle: Triangle, renderPipelineState: MTLRenderPipelineState, renderCommandEncoder: MTLRenderCommandEncoder) {
-        renderCommandEncoder.setRenderPipelineState(renderPipelineState)
-        renderCommandEncoder.setVertexBuffer(triangle.vertexBuffer, offset: 0, atIndex: 0)
-        renderCommandEncoder.setVertexBuffer(createUniformMatrixFor(triangle.modelMatrix()), offset: 0, atIndex: 1)
-        renderCommandEncoder.drawPrimitives(.Triangle, vertexStart: 0, vertexCount: triangle.vertexCount, instanceCount: 1)
-    }
-
     func renderRenderable(renderable: Renderable, renderPipelineState: MTLRenderPipelineState, renderCommandEncoder: MTLRenderCommandEncoder) {
         renderCommandEncoder.setRenderPipelineState(renderPipelineState)
-        renderCommandEncoder.setVertexBuffer(gameObject.renderable.vertexBuffer, offset: 0, atIndex: 0)
+        renderCommandEncoder.setVertexBuffer(renderable.vertexBuffer, offset: 0, atIndex: 0)
 
-        if let physical: Physical = store.findComponentForObjectId(renderable.objectId) {
-            renderCommandEncoder.setVertexBuffer(createUniformMatrixFor(physical.modelMatrix()), offset: 0, atIndex: 1)
+        if let transform: Transform = store.findComponentForObjectId(renderable.objectId) {
+            renderCommandEncoder.setVertexBuffer(createUniformsFor(transform.modelMatrix()), offset: 0, atIndex: 1)
         }
-        renderCommandEncoder.drawPrimitives(.Triangle, vertexStart: 0, vertexCount: gameObject.renderable.vertexCount, instanceCount: 1)
+
+        renderCommandEncoder.drawPrimitives(.Triangle, vertexStart: 0, vertexCount: renderable.vertexCount, instanceCount: 1)
     }
 
-    func createUniformMatrixFor(modelMatrix: GLKMatrix4) -> MTLBuffer {
+    func createUniformsFor(modelMatrix: GLKMatrix4) -> MTLBuffer {
         let transformedModelMatrix = GLKMatrix4Multiply(cameraMatrix, modelMatrix)
 
         let sizeOfMatrix4x4 = 16
-        let sizeOfSingleMatrix = sizeof(Float) * sizeOfMatrix4x4
-        let sizeOfUniformBuffer = sizeOfSingleMatrix * 2
+        let sizeOfSingleMatrixInBytes = sizeof(Float) * sizeOfMatrix4x4
+        let sizeOfUniformBufferInBytes = sizeOfSingleMatrixInBytes * 2
 
-        let uniformBuffer = device.newBufferWithLength(sizeOfUniformBuffer, options: MTLResourceOptions.CPUCacheModeDefaultCache)
+        let uniformBuffer = device.newBufferWithLength(sizeOfUniformBufferInBytes,
+                                                       options: MTLResourceOptions.CPUCacheModeDefaultCache)
         let uniformContents = uniformBuffer.contents()
-        memcpy(uniformContents, GLKMatrix4ToUnsafePointer(transformedModelMatrix), sizeOfSingleMatrix)
-        memcpy(uniformContents + sizeOfSingleMatrix, GLKMatrix4ToUnsafePointer(self.projectionMatrix), sizeOfSingleMatrix)
+        memcpy(uniformContents,
+               GLKMatrix4ToUnsafePointer(transformedModelMatrix),
+               sizeOfSingleMatrixInBytes)
+        memcpy(uniformContents + sizeOfSingleMatrixInBytes,
+               GLKMatrix4ToUnsafePointer(self.projectionMatrix),
+               sizeOfSingleMatrixInBytes)
         return uniformBuffer
     }
     
