@@ -10,9 +10,7 @@ import Foundation
 import GLKit
 
 func GLKMatrix4New() -> GLKMatrix4 {
-    var matrix = GLKMatrix4()
-    matrix = GLKMatrix4Identity
-    return matrix
+    return GLKMatrix4Identity
 }
 
 func GLKMatrix4ToUnsafePointer(matrix: GLKMatrix4) -> UnsafePointer<Float> {
