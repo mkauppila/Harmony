@@ -10,6 +10,7 @@
 		4725A0CA1D22DCC60019D20F /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4725A0C91D22DCC60019D20F /* Utilities.swift */; };
 		4725A0CC1D23B56C0019D20F /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4725A0CB1D23B56C0019D20F /* Models.swift */; };
 		4725A0CE1D23B61E0019D20F /* ComponentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4725A0CD1D23B61E0019D20F /* ComponentStore.swift */; };
+		4725A0D01D23D6C70019D20F /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4725A0CF1D23D6C70019D20F /* Renderer.swift */; };
 		47D3BFA31D15324300131B89 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFA21D15324300131B89 /* AppDelegate.swift */; };
 		47D3BFA51D15324300131B89 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFA41D15324300131B89 /* GameViewController.swift */; };
 		47D3BFA71D15324300131B89 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFA61D15324300131B89 /* Shaders.metal */; };
@@ -34,6 +35,7 @@
 		4725A0C91D22DCC60019D20F /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		4725A0CB1D23B56C0019D20F /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		4725A0CD1D23B61E0019D20F /* ComponentStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComponentStore.swift; sourceTree = "<group>"; };
+		4725A0CF1D23D6C70019D20F /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		47D3BF9F1D15324300131B89 /* Harmony.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Harmony.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		47D3BFA21D15324300131B89 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		47D3BFA41D15324300131B89 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
@@ -91,6 +93,7 @@
 				47D3BFA41D15324300131B89 /* GameViewController.swift */,
 				4725A0CD1D23B61E0019D20F /* ComponentStore.swift */,
 				47D3BFC31D16BEF000131B89 /* Components.swift */,
+				4725A0CF1D23D6C70019D20F /* Renderer.swift */,
 				4725A0C91D22DCC60019D20F /* Utilities.swift */,
 				4725A0CB1D23B56C0019D20F /* Models.swift */,
 				47D3BFC11D16B0DE00131B89 /* Vertex.swift */,
@@ -218,6 +221,7 @@
 				47D3BFC21D16B0DE00131B89 /* Vertex.swift in Sources */,
 				47D3BFA51D15324300131B89 /* GameViewController.swift in Sources */,
 				47D3BFA31D15324300131B89 /* AppDelegate.swift in Sources */,
+				4725A0D01D23D6C70019D20F /* Renderer.swift in Sources */,
 				4725A0CC1D23B56C0019D20F /* Models.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

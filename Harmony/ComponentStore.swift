@@ -9,7 +9,7 @@
 import Foundation
 
 // This is very nicely unit testable
-struct ComponentStore {
+class ComponentStore {
     private var renderables: [GameObjectId: Renderable]
     private var transforms: [GameObjectId: Transform]
 
@@ -18,7 +18,7 @@ struct ComponentStore {
         transforms = [GameObjectId: Transform]()
     }
 
-    mutating func addComponentForObjectId<T: Component>(component: T, objectId: GameObjectId) {
+    func addComponentForObjectId<T: Component>(component: T, objectId: GameObjectId) {
         switch T.self {
         case is Renderable.Type:
             renderables[objectId] = component as? Renderable
@@ -29,7 +29,7 @@ struct ComponentStore {
         }
     }
 
-    mutating func removeComponentForObjectId<T: Component>(component: T, objectId: GameObjectId) {
+    func removeComponentForObjectId<T: Component>(component: T, objectId: GameObjectId) {
         switch T.self {
         case is Renderable.Type:
             renderables.removeValueForKey(objectId)
