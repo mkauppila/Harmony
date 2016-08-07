@@ -11,7 +11,6 @@ import MetalKit
 import GLKit
 
 class Renderer {
-
     private(set) var device: MTLDevice!
 
     private var commandQueue: MTLCommandQueue!
@@ -23,6 +22,8 @@ class Renderer {
 
     private let windowSize: CGSize
     private let componentStore: ComponentStore
+
+    let sampleCount = 4
 
     init(windowSize: CGSize, componentStore: ComponentStore) {
         self.windowSize = windowSize
@@ -70,7 +71,9 @@ class Renderer {
         return GLKMatrix4New()
     }
 
-    private func createRenderingPipelineWithVertexShader(vertexShaderName: String, fragmentShaderName: String,  library: MTLLibrary) -> MTLRenderPipelineState? {
+    private func createRenderingPipelineWithVertexShader(vertexShaderName: String,
+                                                         fragmentShaderName: String,
+                                                         library: MTLLibrary) -> MTLRenderPipelineState? {
         let vertexProgram = library.newFunctionWithName(vertexShaderName)!
         let fragmentProgram = library.newFunctionWithName(fragmentShaderName)!
 

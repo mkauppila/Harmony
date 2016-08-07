@@ -24,7 +24,9 @@ func createVertexBufferFrom(vertices: [Vertex], device: MTLDevice) -> MTLBuffer 
     }
 
     let dataSize = vertexData.count * sizeofValue(vertexData[0])
-    let vertexBuffer = device.newBufferWithBytes(vertexData, length: dataSize, options: MTLResourceOptions.OptionCPUCacheModeDefault)
+    let vertexBuffer = device.newBufferWithBytes(vertexData,
+            length: dataSize,
+            options: MTLResourceOptions.OptionCPUCacheModeDefault)
 
     return vertexBuffer
 }

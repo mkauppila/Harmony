@@ -19,6 +19,6 @@ struct Vertex {
     }
 
     static func sizeInBytes() -> Int {
-        return 7
+        return 7 // == floatBuffer.count
     }
 }

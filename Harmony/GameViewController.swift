@@ -67,9 +67,8 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
         let view = self.view as! GameView
         view.delegate = self
         view.device = renderer.device
-        view.sampleCount = 4
+        view.sampleCount = renderer.sampleCount
         view.becomeFirstResponder()
-
         view.inputDelegate = self
 
         loadAssets()
@@ -106,12 +105,11 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
         let renderable = Renderable(objectId: playerObjectId,
                           vertexBuffer: createVertexBufferFrom(playerShipModel(), device: renderer.device),
                           vertexSizeInBytes: Vertex.sizeInBytes())
-        let physical = Transform(objectId: playerObjectId, position: GLKVector3Make(0, 0.0, -0.5), angleInDegrees: 180);
+        let transform = Transform(objectId: playerObjectId, position: GLKVector3Make(0, 0.0, -0.5), angleInDegrees: 180);
 
         store.addComponentForObjectId(renderable, objectId: playerObjectId)
-        store.addComponentForObjectId(physical, objectId: playerObjectId)
+        store.addComponentForObjectId(transform, objectId: playerObjectId)
     }
-
 
     func drawInMTKView(view: MTKView) {
         let metalView = self.view as! MTKView
