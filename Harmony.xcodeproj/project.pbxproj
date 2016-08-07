@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		332A5673DBF957D2742C58C1 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 332A5932D5386242D00F2CBC /* MainMenu.xib */; };
 		4725A0CA1D22DCC60019D20F /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4725A0C91D22DCC60019D20F /* Utilities.swift */; };
 		4725A0CC1D23B56C0019D20F /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4725A0CB1D23B56C0019D20F /* Models.swift */; };
 		4725A0CE1D23B61E0019D20F /* ComponentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4725A0CD1D23B61E0019D20F /* ComponentStore.swift */; };
@@ -15,7 +16,6 @@
 		47D3BFA51D15324300131B89 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFA41D15324300131B89 /* GameViewController.swift */; };
 		47D3BFA71D15324300131B89 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFA61D15324300131B89 /* Shaders.metal */; };
 		47D3BFA91D15324300131B89 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 47D3BFA81D15324300131B89 /* Assets.xcassets */; };
-		47D3BFAC1D15324300131B89 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 47D3BFAA1D15324300131B89 /* MainMenu.xib */; };
 		47D3BFB71D15324300131B89 /* HarmonyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFB61D15324300131B89 /* HarmonyTests.swift */; };
 		47D3BFC21D16B0DE00131B89 /* Vertex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFC11D16B0DE00131B89 /* Vertex.swift */; };
 		47D3BFC41D16BEF000131B89 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFC31D16BEF000131B89 /* Components.swift */; };
@@ -32,6 +32,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		332A515CB621297BCBFA4E95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Harmony/Base.lproj/MainMenu.xib; sourceTree = SOURCE_ROOT; };
+		332A5C0C060385152F005510 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
 		4725A0C91D22DCC60019D20F /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		4725A0CB1D23B56C0019D20F /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		4725A0CD1D23B61E0019D20F /* ComponentStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComponentStore.swift; sourceTree = "<group>"; };
@@ -41,8 +43,6 @@
 		47D3BFA41D15324300131B89 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		47D3BFA61D15324300131B89 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 		47D3BFA81D15324300131B89 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		47D3BFAB1D15324300131B89 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		47D3BFAD1D15324300131B89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		47D3BFB21D15324300131B89 /* HarmonyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HarmonyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		47D3BFB61D15324300131B89 /* HarmonyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarmonyTests.swift; sourceTree = "<group>"; };
 		47D3BFB81D15324300131B89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -68,6 +68,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		332A5929F0D520E439576BE0 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				332A5C0C060385152F005510 /* Info.plist */,
+				332A5932D5386242D00F2CBC /* MainMenu.xib */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		47D3BF961D15324300131B89 = {
 			isa = PBXGroup;
 			children = (
@@ -99,8 +108,7 @@
 				47D3BFC11D16B0DE00131B89 /* Vertex.swift */,
 				47D3BFA61D15324300131B89 /* Shaders.metal */,
 				47D3BFA81D15324300131B89 /* Assets.xcassets */,
-				47D3BFAA1D15324300131B89 /* MainMenu.xib */,
-				47D3BFAD1D15324300131B89 /* Info.plist */,
+				332A5929F0D520E439576BE0 /* Supporting Files */,
 			);
 			path = Harmony;
 			sourceTree = "<group>";
@@ -196,7 +204,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				47D3BFA91D15324300131B89 /* Assets.xcassets in Resources */,
-				47D3BFAC1D15324300131B89 /* MainMenu.xib in Resources */,
+				332A5673DBF957D2742C58C1 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -245,10 +253,10 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		47D3BFAA1D15324300131B89 /* MainMenu.xib */ = {
+		332A5932D5386242D00F2CBC /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				47D3BFAB1D15324300131B89 /* Base */,
+				332A515CB621297BCBFA4E95 /* Base */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -343,7 +351,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = Harmony/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Harmony/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = without.pants.Harmony;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -355,7 +363,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = Harmony/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Harmony/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = without.pants.Harmony;
 				PRODUCT_NAME = "$(TARGET_NAME)";
