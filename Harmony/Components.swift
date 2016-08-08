@@ -6,7 +6,7 @@
 //  Copyright © 2016 Markus Kauppila. All rights reserved.
 //
 
-import MetalKit
+import Metal
 import GLKit
 
 typealias GameObjectId = Int
@@ -20,10 +20,12 @@ class Renderable: Component {
 
     let vertexBuffer: MTLBuffer
     let vertexCount: Int
+    let primitiveType: MTLPrimitiveType
 
-    init(objectId: GameObjectId, vertexBuffer: MTLBuffer, vertexSizeInBytes: Int) {
+    init(objectId: GameObjectId, vertexBuffer: MTLBuffer, vertexSizeInBytes: Int,  primitiveType: MTLPrimitiveType) {
         self.objectId = objectId
         self.vertexBuffer = vertexBuffer
+        self.primitiveType = primitiveType;
         vertexCount = self.vertexBuffer.length / vertexSizeInBytes
     }
 }

@@ -114,7 +114,9 @@ class Renderer {
         commandBuffer.commit()
     }
 
-    private func renderRenderable(renderable: Renderable, renderPipelineState: MTLRenderPipelineState, renderCommandEncoder: MTLRenderCommandEncoder) {
+    private func renderRenderable(renderable: Renderable,
+                                  renderPipelineState: MTLRenderPipelineState,
+                                  renderCommandEncoder: MTLRenderCommandEncoder) {
         renderCommandEncoder.setRenderPipelineState(renderPipelineState)
         renderCommandEncoder.setVertexBuffer(renderable.vertexBuffer, offset: 0, atIndex: 0)
 
@@ -122,7 +124,7 @@ class Renderer {
             renderCommandEncoder.setVertexBuffer(createUniformsFor(transform.modelMatrix()), offset: 0, atIndex: 1)
         }
 
-        renderCommandEncoder.drawPrimitives(.Triangle,
+        renderCommandEncoder.drawPrimitives(.Line,
                                             vertexStart: 0,
                                             vertexCount: renderable.vertexCount,
                                             instanceCount: 1)

@@ -11,6 +11,7 @@ import MetalKit
 import GLKit
 
 let playerObjectId = 0
+let levelObjectId = 1
 
 enum KeyCode: UInt16 {
     case A = 0
@@ -102,13 +103,30 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
     }
     
     func loadAssets() {
+        createPlayer()
+        createLevel()
+    }
+
+    func createPlayer() {
         let renderable = Renderable(objectId: playerObjectId,
-                          vertexBuffer: createVertexBufferFrom(playerShipModel(), device: renderer.device),
-                          vertexSizeInBytes: Vertex.sizeInBytes())
-        let transform = Transform(objectId: playerObjectId, position: GLKVector3Make(0, 0.0, -0.5), angleInDegrees: 180);
+                vertexBuffer: createVertexBufferFrom(playerShipModel(), device: renderer.device),
+                vertexSizeInBytes: Vertex.sizeInBytes(),
+                primitiveType: MTLPrimitiveType.TriangleStrip)
+        let transform = Transform(objectId: playerObjectId, position: GLKVector3Make(0, 0.0, -2.5), angleInDegrees: 180)
 
         store.addComponentForObjectId(renderable, objectId: playerObjectId)
         store.addComponentForObjectId(transform, objectId: playerObjectId)
+    }
+
+    func createLevel() {
+        let renderable = Renderable(objectId: levelObjectId,
+                vertexBuffer: createVertexBufferFrom(levelModel(), device: renderer.device),
+                vertexSizeInBytes: Vertex.sizeInBytes(),
+                primitiveType: MTLPrimitiveType.Line)
+        let transform = Transform(objectId: levelObjectId, position: GLKVector3Make(0, 0.0, -3.5), angleInDegrees: 180)
+
+        store.addComponentForObjectId(renderable, objectId: levelObjectId)
+        store.addComponentForObjectId(transform, objectId: levelObjectId)
     }
 
     func drawInMTKView(view: MTKView) {
