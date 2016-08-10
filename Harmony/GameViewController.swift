@@ -53,16 +53,84 @@ class GameView: MTKView {
     }
 }
 
+enum LanePositionAction {
+    case MoveLeft
+    case MoveRight
+}
+
+class LanePositionSystem {
+    let store: ComponentStore
+
+    init(store: ComponentStore) {
+        self.store = store
+    }
+
+    func perform(moverId: GameObjectId, levelId: GameObjectId, action: LanePositionAction) {
+        print("Lane position action: \(action)")
+
+        let transform: Transform = store.findComponentForObjectId(moverId)!
+        let lanePosition: LanePosition = store.findComponentForObjectId(moverId)!
+
+        let levelRenderable: Renderable = store.findComponentForObjectId(levelId)!
+        let levelTransform: Transform = store.findComponentForObjectId(levelId)!
+
+        switch (action) {
+        case .MoveLeft:
+            lanePosition.laneIndex -= 1
+        case .MoveRight:
+            lanePosition.laneIndex += 1
+        }
+
+        let maximumLaneIndex = levelRenderable.model.count / 2
+        if lanePosition.laneIndex < 0 {
+            lanePosition.laneIndex = maximumLaneIndex
+        } else if lanePosition.laneIndex > maximumLaneIndex {
+            lanePosition.laneIndex = 0
+        }
+
+        print("Lane index \(lanePosition.laneIndex)")
+
+        // Find out the line points for the lane
+        let firstIndex =  2 * lanePosition.laneIndex
+        let secondIndex =  2 * lanePosition.laneIndex + 1
+        if secondIndex > levelRenderable.model.count {
+            print("Error: Lane position index overflow for position \(lanePosition.laneIndex)")
+            return
+        }
+
+        let firstVertex = levelRenderable.model[firstIndex]
+        let secondVertex = levelRenderable.model[secondIndex]
+
+        print("First vertex \(NSStringFromGLKVector3(firstVertex.position))")
+        print("Second vertex \(NSStringFromGLKVector3(secondVertex.position))")
+
+
+        var vec1 = GLKMatrix4MultiplyVector3(levelTransform.modelMatrix(), firstVertex.position)
+        var vec2 = GLKMatrix4MultiplyVector3(levelTransform.modelMatrix(), secondVertex.position)
+
+        print("First vertex \(NSStringFromGLKVector3(vec1))")
+        print("Second vertex \(NSStringFromGLKVector3(vec2))")
+
+        transform.position = GLKVector3Make(vec1.x, vec1.y, -3.5)
+            //GLKVector3Add(transform.position, GLKVector3Make(0.1, 0.0, 0.0))
+
+        print("position \(NSStringFromGLKVector3(transform.position))")
+    }
+}
+
 class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelegate {
     
     var store: ComponentStore!
     var renderer: Renderer!
+
+    var lanePositionSystem: LanePositionSystem!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         store = ComponentStore()
         renderer = Renderer(windowSize: self.view.frame.size, componentStore: store)
+        lanePositionSystem = LanePositionSystem(store: store)
 
         // setup view properties
         let view = self.view as! GameView
@@ -87,21 +155,15 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
         if let transform: Transform = store.findComponentForObjectId(playerObjectId) {
             switch keyCode {
             case .A, .LeftArrow:
-                transform.position = GLKVector3Add(transform.position, GLKVector3Make(0.1, 0.0, 0.0))
+                lanePositionSystem.perform(playerObjectId, levelId: levelObjectId, action: LanePositionAction.MoveLeft)
             case .D, .RightArrow:
-                transform.position = GLKVector3Add(transform.position, GLKVector3Make(-0.1, 0.0, 0.0))
-            case .W, .UpArrow:
-                transform.position = GLKVector3Add(transform.position, GLKVector3Make(0.0, 0.0, -0.01))
-            case .S, .DownArrow:
-                transform.position = GLKVector3Add(transform.position, GLKVector3Make(0.0, 0.0, 0.01))
+                lanePositionSystem.perform(playerObjectId, levelId: levelObjectId, action: LanePositionAction.MoveRight)
             default:
                 break
             }
-
-            print("position \(NSStringFromGLKVector3(transform.position))")
         }
     }
-    
+
     func loadAssets() {
         createPlayer()
         createLevel()
@@ -114,6 +176,7 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
                 vertexSizeInBytes: Vertex.sizeInBytes(),
                 primitiveType: MTLPrimitiveType.TriangleStrip)
         let transform = Transform(objectId: playerObjectId, position: GLKVector3Make(0.0, 0.0, -3.5), angleInDegrees: 180)
+        let lanePosition = LanePosition(objectId: playerObjectId, laneIndex: 0)
 
         store.addComponentForObjectId(renderable, objectId: playerObjectId)
         store.addComponentForObjectId(transform, objectId: playerObjectId)
