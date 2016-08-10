@@ -23,7 +23,7 @@ class Renderer {
     private let windowSize: CGSize
     private let componentStore: ComponentStore
 
-    let sampleCount = 4
+    let sampleCount: Int = 4
 
     init(windowSize: CGSize, componentStore: ComponentStore) {
         self.windowSize = windowSize
@@ -121,7 +121,7 @@ class Renderer {
         renderCommandEncoder.setVertexBuffer(renderable.vertexBuffer, offset: 0, atIndex: 0)
 
         if let transform: Transform = componentStore.findComponentForObjectId(renderable.objectId) {
-            renderCommandEncoder.setVertexBuffer(createUniformsFor(transform.modelMatrix()), offset: 0, atIndex: 1)
+            renderCommandEncoder.setVertexBuffer(createUniforms(transform.modelMatrix()), offset: 0, atIndex: 1)
         }
 
         renderCommandEncoder.drawPrimitives(.Line,
@@ -130,7 +130,7 @@ class Renderer {
                                             instanceCount: 1)
     }
 
-    private func createUniformsFor(modelMatrix: GLKMatrix4) -> MTLBuffer {
+    private func createUniforms(modelMatrix: GLKMatrix4) -> MTLBuffer {
         let transformedModelMatrix = GLKMatrix4Multiply(cameraMatrix, modelMatrix)
 
         let sizeOfMatrix4x4 = 16

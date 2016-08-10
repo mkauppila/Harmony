@@ -31,9 +31,12 @@ class Renderable: Component {
     let vertexBuffer: MTLBuffer
     let vertexCount: Int
     let primitiveType: MTLPrimitiveType
+    let model: [Vertex]
 
-    init(objectId: GameObjectId, vertexBuffer: MTLBuffer, vertexSizeInBytes: Int,  primitiveType: MTLPrimitiveType) {
+    init(objectId: GameObjectId, model: [Vertex], vertexBuffer: MTLBuffer,
+         vertexSizeInBytes: Int,  primitiveType: MTLPrimitiveType) {
         self.objectId = objectId
+        self.model = model
         self.vertexBuffer = vertexBuffer
         self.primitiveType = primitiveType;
         vertexCount = self.vertexBuffer.length / vertexSizeInBytes
