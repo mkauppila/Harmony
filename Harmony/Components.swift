@@ -15,6 +15,16 @@ protocol Component {
     var objectId: GameObjectId { get }
 }
 
+class LanePosition: Component {
+    private (set) var objectId: GameObjectId
+    var laneIndex: Int
+
+    init(objectId: GameObjectId, laneIndex: Int) {
+        self.objectId = objectId
+        self.laneIndex = laneIndex
+    }
+}
+
 class Renderable: Component {
     private (set) var objectId: GameObjectId
 

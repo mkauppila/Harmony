@@ -8,14 +8,17 @@
 
 import Foundation
 
-// This is very nicely unit testable
+// TODO This is very nicely unit testable
+// TODO try to use `map` instead of the endless switch-case swamp
 class ComponentStore {
     private var renderables: [GameObjectId: Renderable]
     private var transforms: [GameObjectId: Transform]
+    private var lanePositions: [GameObjectId: LanePosition]
 
     init() {
         renderables = [GameObjectId: Renderable]()
         transforms = [GameObjectId: Transform]()
+        lanePositions = [GameObjectId: LanePosition]()
     }
 
     func addComponentForObjectId<T: Component>(component: T, objectId: GameObjectId) {
@@ -24,6 +27,8 @@ class ComponentStore {
             renderables[objectId] = component as? Renderable
         case is Transform.Type:
             transforms[objectId] = component as? Transform
+        case is LanePosition.Type:
+            lanePositions[objectId] = component as? LanePosition
         default:
             break
         }
@@ -35,6 +40,8 @@ class ComponentStore {
             renderables.removeValueForKey(objectId)
         case is Transform.Type:
             transforms.removeValueForKey(objectId)
+        case is LanePosition.Type:
+            lanePositions.removeValueForKey(objectId)
         default:
             break
         }
@@ -46,6 +53,8 @@ class ComponentStore {
             return renderables[objectId] as? T
         case is Transform.Type:
             return transforms[objectId] as? T
+        case is LanePosition.Type:
+            return lanePositions[objectId] as? T
         default:
             return nil
         }
@@ -60,6 +69,10 @@ class ComponentStore {
         case is Transform.Type:
             return transforms.map({ (_, transform) -> T in
                 return transform as! T
+            })
+        case is LanePosition.Type:
+            return lanePositions.map({ (_, lanePosition) -> T in
+                return lanePosition as! T
             })
         default:
             return []
