@@ -21,7 +21,6 @@
 		47D3BFA51D15324300131B89 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFA41D15324300131B89 /* GameViewController.swift */; };
 		47D3BFA71D15324300131B89 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFA61D15324300131B89 /* Shaders.metal */; };
 		47D3BFA91D15324300131B89 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 47D3BFA81D15324300131B89 /* Assets.xcassets */; };
-		47D3BFB71D15324300131B89 /* HarmonyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFB61D15324300131B89 /* HarmonyTests.swift */; };
 		47D3BFC21D16B0DE00131B89 /* Vertex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFC11D16B0DE00131B89 /* Vertex.swift */; };
 		47D3BFC41D16BEF000131B89 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFC31D16BEF000131B89 /* Components.swift */; };
 /* End PBXBuildFile section */
@@ -66,7 +65,6 @@
 		47D3BFA61D15324300131B89 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 		47D3BFA81D15324300131B89 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		47D3BFB21D15324300131B89 /* HarmonyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HarmonyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		47D3BFB61D15324300131B89 /* HarmonyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarmonyTests.swift; sourceTree = "<group>"; };
 		47D3BFB81D15324300131B89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		47D3BFC11D16B0DE00131B89 /* Vertex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vertex.swift; sourceTree = "<group>"; };
 		47D3BFC31D16BEF000131B89 /* Components.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
@@ -153,7 +151,6 @@
 			isa = PBXGroup;
 			children = (
 				4776981E1D5C75CB006F686A /* ComponentStoreSpec.swift */,
-				47D3BFB61D15324300131B89 /* HarmonyTests.swift */,
 				47D3BFB81D15324300131B89 /* Info.plist */,
 			);
 			path = HarmonyTests;
@@ -276,7 +273,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				47D3BFB71D15324300131B89 /* HarmonyTests.swift in Sources */,
 				4776981F1D5C75CB006F686A /* ComponentStoreSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
