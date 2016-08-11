@@ -17,3 +17,5 @@ DerivedData
 *.hmap
 *.xccheckout
 
+# Carthage
+Carthage/*

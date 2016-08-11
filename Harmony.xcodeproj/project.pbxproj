@@ -12,6 +12,10 @@
 		4725A0CC1D23B56C0019D20F /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4725A0CB1D23B56C0019D20F /* Models.swift */; };
 		4725A0CE1D23B61E0019D20F /* ComponentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4725A0CD1D23B61E0019D20F /* ComponentStore.swift */; };
 		4725A0D01D23D6C70019D20F /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4725A0CF1D23D6C70019D20F /* Renderer.swift */; };
+		477698141D5C5C8A006F686A /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 477698121D5C5C8A006F686A /* Nimble.framework */; };
+		477698151D5C5C8A006F686A /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 477698131D5C5C8A006F686A /* Quick.framework */; };
+		4776981C1D5C5EE4006F686A /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 477698121D5C5C8A006F686A /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4776981D1D5C5EE4006F686A /* Quick.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 477698131D5C5C8A006F686A /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		47D3BFA31D15324300131B89 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFA21D15324300131B89 /* AppDelegate.swift */; };
 		47D3BFA51D15324300131B89 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFA41D15324300131B89 /* GameViewController.swift */; };
 		47D3BFA71D15324300131B89 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFA61D15324300131B89 /* Shaders.metal */; };
@@ -31,6 +35,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		477698171D5C5EA0006F686A /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4776981C1D5C5EE4006F686A /* Nimble.framework in CopyFiles */,
+				4776981D1D5C5EE4006F686A /* Quick.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		332A515CB621297BCBFA4E95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Harmony/Base.lproj/MainMenu.xib; sourceTree = SOURCE_ROOT; };
 		332A5C0C060385152F005510 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
@@ -38,6 +56,8 @@
 		4725A0CB1D23B56C0019D20F /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		4725A0CD1D23B61E0019D20F /* ComponentStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComponentStore.swift; sourceTree = "<group>"; };
 		4725A0CF1D23D6C70019D20F /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		477698121D5C5C8A006F686A /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/Mac/Nimble.framework; sourceTree = "<group>"; };
+		477698131D5C5C8A006F686A /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/Mac/Quick.framework; sourceTree = "<group>"; };
 		47D3BF9F1D15324300131B89 /* Harmony.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Harmony.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		47D3BFA21D15324300131B89 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		47D3BFA41D15324300131B89 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
@@ -62,6 +82,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				477698141D5C5C8A006F686A /* Nimble.framework in Frameworks */,
+				477698151D5C5C8A006F686A /* Quick.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,14 +99,26 @@
 			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		477698161D5C5C93006F686A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				477698121D5C5C8A006F686A /* Nimble.framework */,
+				477698131D5C5C8A006F686A /* Quick.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		47D3BF961D15324300131B89 = {
 			isa = PBXGroup;
 			children = (
 				47D3BFA11D15324300131B89 /* Harmony */,
 				47D3BFB51D15324300131B89 /* HarmonyTests */,
+				477698161D5C5C93006F686A /* Frameworks */,
 				47D3BFA01D15324300131B89 /* Products */,
 			);
+			indentWidth = 4;
 			sourceTree = "<group>";
+			tabWidth = 4;
 		};
 		47D3BFA01D15324300131B89 /* Products */ = {
 			isa = PBXGroup;
@@ -149,6 +183,7 @@
 				47D3BFAE1D15324300131B89 /* Sources */,
 				47D3BFAF1D15324300131B89 /* Frameworks */,
 				47D3BFB01D15324300131B89 /* Resources */,
+				477698171D5C5EA0006F686A /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -376,6 +411,10 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = HarmonyTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = without.pants.HarmonyTests;
@@ -389,6 +428,10 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = HarmonyTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = without.pants.HarmonyTests;
