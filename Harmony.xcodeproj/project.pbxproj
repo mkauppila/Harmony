@@ -16,6 +16,7 @@
 		477698151D5C5C8A006F686A /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 477698131D5C5C8A006F686A /* Quick.framework */; };
 		4776981C1D5C5EE4006F686A /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 477698121D5C5C8A006F686A /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4776981D1D5C5EE4006F686A /* Quick.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 477698131D5C5C8A006F686A /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4776981F1D5C75CB006F686A /* ComponentStoreSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4776981E1D5C75CB006F686A /* ComponentStoreSpec.swift */; };
 		47D3BFA31D15324300131B89 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFA21D15324300131B89 /* AppDelegate.swift */; };
 		47D3BFA51D15324300131B89 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFA41D15324300131B89 /* GameViewController.swift */; };
 		47D3BFA71D15324300131B89 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 47D3BFA61D15324300131B89 /* Shaders.metal */; };
@@ -58,6 +59,7 @@
 		4725A0CF1D23D6C70019D20F /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		477698121D5C5C8A006F686A /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/Mac/Nimble.framework; sourceTree = "<group>"; };
 		477698131D5C5C8A006F686A /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/Mac/Quick.framework; sourceTree = "<group>"; };
+		4776981E1D5C75CB006F686A /* ComponentStoreSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComponentStoreSpec.swift; sourceTree = "<group>"; };
 		47D3BF9F1D15324300131B89 /* Harmony.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Harmony.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		47D3BFA21D15324300131B89 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		47D3BFA41D15324300131B89 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 		47D3BFB51D15324300131B89 /* HarmonyTests */ = {
 			isa = PBXGroup;
 			children = (
+				4776981E1D5C75CB006F686A /* ComponentStoreSpec.swift */,
 				47D3BFB61D15324300131B89 /* HarmonyTests.swift */,
 				47D3BFB81D15324300131B89 /* Info.plist */,
 			);
@@ -274,6 +277,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				47D3BFB71D15324300131B89 /* HarmonyTests.swift in Sources */,
+				4776981F1D5C75CB006F686A /* ComponentStoreSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

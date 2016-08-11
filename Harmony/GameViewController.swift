@@ -68,11 +68,11 @@ class LanePositionSystem {
     func perform(moverId: GameObjectId, levelId: GameObjectId, action: LanePositionAction) {
         print("Lane position action: \(action)")
 
-        let transform: Transform = store.findComponentForObjectId(moverId)!
-        let lanePosition: LanePosition = store.findComponentForObjectId(moverId)!
+        let transform: Transform = store.findComponent(Transform.self, forObjectId: moverId)!
+        let lanePosition: LanePosition = store.findComponent(LanePosition.self, forObjectId: moverId)!
 
-        let levelRenderable: Renderable = store.findComponentForObjectId(levelId)!
-        let levelTransform: Transform = store.findComponentForObjectId(levelId)!
+        let levelRenderable: Renderable = store.findComponent(Renderable.self, forObjectId: levelId)!
+        let levelTransform: Transform = store.findComponent(Transform.self, forObjectId: levelId)!
 
         switch (action) {
         case .MoveLeft:
@@ -107,11 +107,24 @@ class LanePositionSystem {
 
         var vec1 = GLKMatrix4MultiplyVector3(levelTransform.modelMatrix(), firstVertex.position)
         var vec2 = GLKMatrix4MultiplyVector3(levelTransform.modelMatrix(), secondVertex.position)
+        let middleVec = GLKVector3DivideScalar(GLKVector3Add(vec1, vec2), 2)
 
         print("First vertex \(NSStringFromGLKVector3(vec1))")
         print("Second vertex \(NSStringFromGLKVector3(vec2))")
+        print("middle vertex \(NSStringFromGLKVector3(middleVec))")
 
-        transform.position = GLKVector3Make(vec1.x, vec1.y, -3.5)
+        // needs to do some "padding"
+        let horizontalLane = vec1.y == vec2.y
+
+        if horizontalLane {
+            print("Is horizontal lane")
+        } else {
+            print("Is vertical  lane")
+        }
+
+        let x: Float = middleVec.x //+ (horizontalLane ? 0.0 : 0.5)
+        let y: Float = middleVec.y //+ (!horizontalLane ? 0.5 : 0.0)
+        transform.position = GLKVector3Make(x, y, -3.5)
             //GLKVector3Add(transform.position, GLKVector3Make(0.1, 0.0, 0.0))
 
         print("position \(NSStringFromGLKVector3(transform.position))")
@@ -129,6 +142,10 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
         super.viewDidLoad()
 
         store = ComponentStore()
+        store.registerComponent(Renderable.self)
+        store.registerComponent(Transform.self)
+        store.registerComponent(LanePosition.self)
+
         renderer = Renderer(windowSize: self.view.frame.size, componentStore: store)
         lanePositionSystem = LanePositionSystem(store: store)
 
@@ -152,7 +169,7 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
             return
         }
 
-        if let transform: Transform = store.findComponentForObjectId(playerObjectId) {
+        if let transform: Transform = store.findComponent(Transform.self, forObjectId: playerObjectId) {
             switch keyCode {
             case .A, .LeftArrow:
                 lanePositionSystem.perform(playerObjectId, levelId: levelObjectId, action: LanePositionAction.MoveLeft)
@@ -178,9 +195,9 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
         let transform = Transform(objectId: playerObjectId, position: GLKVector3Make(0.0, 0.0, -3.5), angleInDegrees: 180)
         let lanePosition = LanePosition(objectId: playerObjectId, laneIndex: 0)
 
-        store.addComponentForObjectId(renderable, objectId: playerObjectId)
-        store.addComponentForObjectId(transform, objectId: playerObjectId)
-        store.addComponentForObjectId(lanePosition, objectId: playerObjectId)
+        store.addComponent(renderable, forObjectId: playerObjectId)
+        store.addComponent(transform, forObjectId: playerObjectId)
+        store.addComponent(lanePosition, forObjectId: playerObjectId)
     }
 
     func createLevel() {
@@ -191,15 +208,15 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
                 primitiveType: MTLPrimitiveType.Line)
         let transform = Transform(objectId: levelObjectId, position: GLKVector3Make(0.0, 0.0, -3.5), angleInDegrees: 180)
 
-        store.addComponentForObjectId(renderable, objectId: levelObjectId)
-        store.addComponentForObjectId(transform, objectId: levelObjectId)
+        store.addComponent(renderable, forObjectId: levelObjectId)
+        store.addComponent(transform, forObjectId: levelObjectId)
     }
 
     func drawInMTKView(view: MTKView) {
         let metalView = self.view as! MTKView
         let drawable = metalView.currentDrawable!
 
-        let allRenderables: [Renderable] = store.allComponentsOfType()
+        let allRenderables: [Renderable] = store.allComponentsOfType(Renderable.self)
         renderer.drawRenderables(drawable, allRenderables: allRenderables)
     }
 

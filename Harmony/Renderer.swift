@@ -120,7 +120,7 @@ class Renderer {
         renderCommandEncoder.setRenderPipelineState(renderPipelineState)
         renderCommandEncoder.setVertexBuffer(renderable.vertexBuffer, offset: 0, atIndex: 0)
 
-        if let transform: Transform = componentStore.findComponentForObjectId(renderable.objectId) {
+        if let transform: Transform = componentStore.findComponent(Transform.self, forObjectId: renderable.objectId) {
             renderCommandEncoder.setVertexBuffer(createUniforms(transform.modelMatrix()), offset: 0, atIndex: 1)
         }
 
