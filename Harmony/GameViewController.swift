@@ -105,29 +105,33 @@ class LanePositionSystem {
         print("Second vertex \(NSStringFromGLKVector3(secondVertex.position))")
 
 
-        var vec1 = GLKMatrix4MultiplyVector3(levelTransform.modelMatrix(), firstVertex.position)
-        var vec2 = GLKMatrix4MultiplyVector3(levelTransform.modelMatrix(), secondVertex.position)
+        let vec1 = GLKMatrix4MultiplyVector3(levelTransform.modelMatrix(), firstVertex.position)
+        let vec2 = GLKMatrix4MultiplyVector3(levelTransform.modelMatrix(), secondVertex.position)
+        let vec3 = GLKVector3Subtract(vec1, vec2)
         let middleVec = GLKVector3DivideScalar(GLKVector3Add(vec1, vec2), 2)
 
         print("First vertex \(NSStringFromGLKVector3(vec1))")
         print("Second vertex \(NSStringFromGLKVector3(vec2))")
         print("middle vertex \(NSStringFromGLKVector3(middleVec))")
 
-        // needs to do some "padding"
-        let horizontalLane = vec1.y == vec2.y
+        print("vec3 \(NSStringFromGLKVector3(vec3))")
 
-        if horizontalLane {
-            print("Is horizontal lane")
-        } else {
-            print("Is vertical  lane")
-        }
+        let perp = GLKVector2Make(-vec3.y, vec3.x)
+        let normPerp = GLKVector2MultiplyScalar(GLKVector2Normalize(perp), -0.1)
 
-        let x: Float = middleVec.x //+ (horizontalLane ? 0.0 : 0.5)
-        let y: Float = middleVec.y //+ (!horizontalLane ? 0.5 : 0.0)
+        let x: Float = middleVec.x + normPerp.x
+        let y: Float = middleVec.y + normPerp.y
+
         transform.position = GLKVector3Make(x, y, -3.5)
-            //GLKVector3Add(transform.position, GLKVector3Make(0.1, 0.0, 0.0))
 
         print("position \(NSStringFromGLKVector3(transform.position))")
+    }
+
+    private func angleBetweenVectorsInDegrees(lhs: GLKVector3, rhs: GLKVector3) -> Float {
+        let deltaX = lhs.x - rhs.x
+        let deltaY = lhs.y - rhs.y
+        let angleInRadians = atan2(deltaX, deltaY)
+        return GLKMathRadiansToDegrees(angleInRadians)
     }
 }
 
@@ -169,15 +173,13 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
             return
         }
 
-        if let transform: Transform = store.findComponent(Transform.self, forObjectId: playerObjectId) {
-            switch keyCode {
-            case .A, .LeftArrow:
-                lanePositionSystem.perform(playerObjectId, levelId: levelObjectId, action: LanePositionAction.MoveLeft)
-            case .D, .RightArrow:
-                lanePositionSystem.perform(playerObjectId, levelId: levelObjectId, action: LanePositionAction.MoveRight)
-            default:
-                break
-            }
+        switch keyCode {
+        case .A, .LeftArrow:
+            lanePositionSystem.perform(playerObjectId, levelId: levelObjectId, action: LanePositionAction.MoveRight)
+        case .D, .RightArrow:
+            lanePositionSystem.perform(playerObjectId, levelId: levelObjectId, action: LanePositionAction.MoveLeft)
+        default:
+            break
         }
     }
 
