@@ -93,10 +93,10 @@ class LanePositionSystem {
         return GLKVector3Make(x, y, -3.5)
     }
 
-    private func angleBetweenVectorsInDegrees(lhs: GLKVector3, rhs: GLKVector3) -> Float {
-        let deltaX = lhs.x - rhs.x
-        let deltaY = lhs.y - rhs.y
-        let angleInRadians = atan2(deltaX, deltaY)
-        return GLKMathRadiansToDegrees(angleInRadians)
-    }
+//    private func angleBetweenVectorsInDegrees(lhs: GLKVector3, rhs: GLKVector3) -> Float {
+//        let deltaX = lhs.x - rhs.x
+//        let deltaY = lhs.y - rhs.y
+//        let angleInRadians = atan2(deltaX, deltaY)
+//        return GLKMathRadiansToDegrees(angleInRadians)
+//    }
 }

@@ -27,8 +27,6 @@ class ComponentStore {
         return allComponents[NSStringFromClass(componentClass)] != nil
     }
 
-
-
     func addComponent<T: Component>(component: T, forObjectId objectId: GameObjectId) {
         if let componentName = typeNameOfComponent(component),
            var comps = allComponents[componentName] {

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		332A5673DBF957D2742C58C1 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 332A5932D5386242D00F2CBC /* MainMenu.xib */; };
 		332A5B07F79794302FA68BBD /* LanePositionSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 332A5E7045800E24273A4FDA /* LanePositionSystem.swift */; };
+		332A5E95E05B87A823514BC4 /* LanePositionSystemSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 332A55B45E688CFAD08D3923 /* LanePositionSystemSpec.swift */; };
 		4725A0CA1D22DCC60019D20F /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4725A0C91D22DCC60019D20F /* Utilities.swift */; };
 		4725A0CC1D23B56C0019D20F /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4725A0CB1D23B56C0019D20F /* Models.swift */; };
 		4725A0CE1D23B61E0019D20F /* ComponentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4725A0CD1D23B61E0019D20F /* ComponentStore.swift */; };
@@ -52,6 +53,7 @@
 
 /* Begin PBXFileReference section */
 		332A515CB621297BCBFA4E95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Harmony/Base.lproj/MainMenu.xib; sourceTree = SOURCE_ROOT; };
+		332A55B45E688CFAD08D3923 /* LanePositionSystemSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LanePositionSystemSpec.swift; sourceTree = "<group>"; };
 		332A5C0C060385152F005510 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
 		332A5E7045800E24273A4FDA /* LanePositionSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LanePositionSystem.swift; sourceTree = "<group>"; };
 		4725A0C91D22DCC60019D20F /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 			children = (
 				4776981E1D5C75CB006F686A /* ComponentStoreSpec.swift */,
 				47D3BFB81D15324300131B89 /* Info.plist */,
+				332A55B45E688CFAD08D3923 /* LanePositionSystemSpec.swift */,
 			);
 			path = HarmonyTests;
 			sourceTree = "<group>";
@@ -278,6 +281,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4776981F1D5C75CB006F686A /* ComponentStoreSpec.swift in Sources */,
+				332A5E95E05B87A823514BC4 /* LanePositionSystemSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
