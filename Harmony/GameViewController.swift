@@ -14,22 +14,22 @@ let playerObjectId = 0
 let levelObjectId = 1
 
 enum KeyCode: UInt16 {
-    case A = 0
-    case D = 2
-    case W = 13
-    case S = 1
-    case Q = 12
-    case E = 14
+    case a = 0
+    case d = 2
+    case w = 13
+    case s = 1
+    case q = 12
+    case e = 14
 
-    case UpArrow = 126
-    case DownArrow = 125
-    case LeftArrow = 123
-    case RightArrow = 124
+    case upArrow = 126
+    case downArrow = 125
+    case leftArrow = 123
+    case rightArrow = 124
 }
 
 protocol KeyboardInputDelegate {
-    func keyUp(event: NSEvent)
-    func keyDown(event: NSEvent)
+    func keyUp(_ event: NSEvent)
+    func keyDown(_ event: NSEvent)
 }
 
 class GameView: MTKView {
@@ -41,10 +41,10 @@ class GameView: MTKView {
 //      enableSetNeedsDisplay = false
     }
     
-    override func keyUp(theEvent: NSEvent) {
+    override func keyUp(with theEvent: NSEvent) {
         inputDelegate?.keyUp(theEvent)
     }
-    override func keyDown(theEvent: NSEvent) {
+    override func keyDown(with theEvent: NSEvent) {
         inputDelegate?.keyDown(theEvent)
     }
 
@@ -82,20 +82,20 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
         loadAssets()
     }
 
-    override func keyUp(event: NSEvent) {
+    override func keyUp(with event: NSEvent) {
     }
 
-    override func keyDown(event: NSEvent) {
+    override func keyDown(with event: NSEvent) {
         guard let keyCode = KeyCode(rawValue: event.keyCode) else {
             print("Not supported keyCode \(event.keyCode)")
             return
         }
 
         switch keyCode {
-        case .A, .LeftArrow:
-            lanePositionSystem.perform(playerObjectId, levelId: levelObjectId, action: LanePositionAction.MoveRight)
-        case .D, .RightArrow:
-            lanePositionSystem.perform(playerObjectId, levelId: levelObjectId, action: LanePositionAction.MoveLeft)
+        case .a, .leftArrow:
+            lanePositionSystem.perform(playerObjectId, levelId: levelObjectId, action: LanePositionAction.moveRight)
+        case .d, .rightArrow:
+            lanePositionSystem.perform(playerObjectId, levelId: levelObjectId, action: LanePositionAction.moveLeft)
         default:
             break
         }
@@ -111,7 +111,7 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
                 model: playerShipModel(),
                 vertexBuffer: createVertexBufferFrom(playerShipModel(), device: renderer.device),
                 vertexSizeInBytes: Vertex.sizeInBytes(),
-                primitiveType: MTLPrimitiveType.TriangleStrip)
+                primitiveType: MTLPrimitiveType.triangleStrip)
         let transform = Transform(objectId: playerObjectId, position: GLKVector3Make(0.0, 0.0, -3.5), angleInDegrees: 180)
         let lanePosition = LanePosition(objectId: playerObjectId, laneIndex: 0)
 
@@ -125,14 +125,14 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
                 model: levelModel(),
                 vertexBuffer: createVertexBufferFrom(levelModel(), device: renderer.device),
                 vertexSizeInBytes: Vertex.sizeInBytes(),
-                primitiveType: MTLPrimitiveType.Line)
+                primitiveType: MTLPrimitiveType.line)
         let transform = Transform(objectId: levelObjectId, position: GLKVector3Make(0.0, 0.0, -3.5), angleInDegrees: 180)
 
         store.addComponent(renderable, forObjectId: levelObjectId)
         store.addComponent(transform, forObjectId: levelObjectId)
     }
 
-    func drawInMTKView(view: MTKView) {
+    func draw(in view: MTKView) {
         let metalView = self.view as! MTKView
         let drawable = metalView.currentDrawable!
 
@@ -140,7 +140,7 @@ class GameViewController: NSViewController, MTKViewDelegate, KeyboardInputDelega
         renderer.drawRenderables(drawable, allRenderables: allRenderables)
     }
 
-    func mtkView(view: MTKView, drawableSizeWillChange size: CGSize) {
+    func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         
     }
 }

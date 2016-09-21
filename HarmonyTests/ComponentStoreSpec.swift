@@ -11,7 +11,7 @@ import Nimble
 @testable import Harmony
 
 class TestComponent: Component {
-    private (set) var objectId: GameObjectId
+    fileprivate (set) var objectId: GameObjectId
 
     let value: Int
 

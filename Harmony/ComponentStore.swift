@@ -9,25 +9,25 @@
 import Foundation
 
 class ComponentStore {
-    private var allComponents: [String: [GameObjectId: Component]]
+    fileprivate var allComponents: [String: [GameObjectId: Component]]
 
     init() {
         allComponents = [String: [GameObjectId: Component]]()
     }
 
-    func registerComponent(componentClass: AnyClass) {
+    func registerComponent(_ componentClass: AnyClass) {
         allComponents[NSStringFromClass(componentClass)] = [GameObjectId: Component]()
     }
 
-    func deregisterComponent(componentClass: AnyClass) {
-        allComponents.removeValueForKey(NSStringFromClass(componentClass))
+    func deregisterComponent(_ componentClass: AnyClass) {
+        allComponents.removeValue(forKey: NSStringFromClass(componentClass))
     }
 
-    func isComponentRegistered(componentClass: AnyClass) -> Bool {
+    func isComponentRegistered(_ componentClass: AnyClass) -> Bool {
         return allComponents[NSStringFromClass(componentClass)] != nil
     }
 
-    func addComponent<T: Component>(component: T, forObjectId objectId: GameObjectId) {
+    func addComponent<T: Component>(_ component: T, forObjectId objectId: GameObjectId) {
         if let componentName = typeNameOfComponent(component),
            var comps = allComponents[componentName] {
             comps[objectId] = component
@@ -35,7 +35,7 @@ class ComponentStore {
         }
     }
 
-    func findComponent<T>(componentClass: AnyClass, forObjectId objectId: GameObjectId) -> T? {
+    func findComponent<T>(_ componentClass: AnyClass, forObjectId objectId: GameObjectId) -> T? {
         if let comps = allComponents[NSStringFromClass(componentClass)] {
             return comps[objectId] as? T
         } else {
@@ -43,14 +43,14 @@ class ComponentStore {
         }
     }
 
-    func removeComponent<T: Component>(component: T, forObjectId objectId: GameObjectId) {
+    func removeComponent<T: Component>(_ component: T, forObjectId objectId: GameObjectId) {
         if let componentName = typeNameOfComponent(component),
            var comps = allComponents[componentName] {
-            comps.removeValueForKey(objectId)
+            comps.removeValue(forKey: objectId)
         }
     }
 
-    func allComponentsOfType<T: Component>(componentClass: AnyClass) -> [T] {
+    func allComponentsOfType<T: Component>(_ componentClass: AnyClass) -> [T] {
         if let comps = allComponents[NSStringFromClass(componentClass)] {
             return comps.map({ (_, c) -> T in
                 return c as! T
@@ -60,7 +60,7 @@ class ComponentStore {
         }
     }
 
-    private func typeNameOfComponent<T: Component>(component: T) -> String? {
+    fileprivate func typeNameOfComponent<T: Component>(_ component: T) -> String? {
         if let classType = T.self as? AnyClass {
             return NSStringFromClass(classType)
         } else {

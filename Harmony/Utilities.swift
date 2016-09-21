@@ -13,7 +13,12 @@ func GLKMatrix4New() -> GLKMatrix4 {
     return GLKMatrix4Identity
 }
 
-func GLKMatrix4ToUnsafePointer(matrix: GLKMatrix4) -> UnsafePointer<Float> {
-    return UnsafePointer<Float>(Array(arrayLiteral: matrix.m))
+func GLKMatrix4ToUnsafePointer(_ matrix: GLKMatrix4) -> UnsafeRawPointer { ///UnsafePointer<Float> {
+    // return UnsafePointer<Float>(Array(arrayLiteral: matrix.m))
+
+    return nil // UnsafeRawPointer()
+
+    // withMemoryRebound(to: )
+    // UnsafePointer<Float>.withMemoryRebound(to:)
 }
 

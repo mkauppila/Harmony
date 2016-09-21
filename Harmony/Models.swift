@@ -81,16 +81,16 @@ func levelModel() -> [Vertex]  {
 //    ];
 }
 
-func createVertexBufferFrom(vertices: [Vertex], device: MTLDevice) -> MTLBuffer {
+func createVertexBufferFrom(_ vertices: [Vertex], device: MTLDevice) -> MTLBuffer {
     var vertexData = [Float]()
     for vertex in vertices {
         vertexData += vertex.floatBuffer()
     }
 
-    let dataSize = vertexData.count * sizeofValue(vertexData[0])
-    let vertexBuffer = device.newBufferWithBytes(vertexData,
+    let dataSize = vertexData.count * MemoryLayout.size(ofValue: vertexData[0])
+    let vertexBuffer = device.makeBuffer(bytes: vertexData,
             length: dataSize,
-            options: MTLResourceOptions.OptionCPUCacheModeDefault)
+            options: MTLResourceOptions())
 
     return vertexBuffer
 }

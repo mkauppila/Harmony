@@ -11,17 +11,17 @@ import MetalKit
 import GLKit
 
 class Renderer {
-    private(set) var device: MTLDevice!
+    fileprivate(set) var device: MTLDevice!
 
-    private var commandQueue: MTLCommandQueue!
-    private var defaultPipelineState: MTLRenderPipelineState!
-    private var blackAndWhitePipelineState: MTLRenderPipelineState!
+    fileprivate var commandQueue: MTLCommandQueue!
+    fileprivate var defaultPipelineState: MTLRenderPipelineState!
+    fileprivate var blackAndWhitePipelineState: MTLRenderPipelineState!
 
-    private var projectionMatrix: GLKMatrix4!
-    private var cameraMatrix: GLKMatrix4!
+    fileprivate var projectionMatrix: GLKMatrix4!
+    fileprivate var cameraMatrix: GLKMatrix4!
 
-    private let windowSize: CGSize
-    private let componentStore: ComponentStore
+    fileprivate let windowSize: CGSize
+    fileprivate let componentStore: ComponentStore
 
     let sampleCount: Int = 4
 
@@ -46,11 +46,11 @@ class Renderer {
         projectionMatrix = createProjectionMatrix()
         cameraMatrix = createCameraMatrix()
 
-        commandQueue = device.newCommandQueue()
+        commandQueue = device.makeCommandQueue()
         commandQueue.label = "main command queue"
     }
 
-    private func createProjectionMatrix() -> GLKMatrix4 {
+    fileprivate func createProjectionMatrix() -> GLKMatrix4 {
         let fovyRadians: Float = Float(M_PI * 0.66)
         let aspectRatio: Float = Float(windowSize.width / windowSize.height)
         let nearZ: Float = 0.01
@@ -58,7 +58,7 @@ class Renderer {
         return GLKMatrix4MakePerspective(fovyRadians, aspectRatio, nearZ, farZ)
     }
 
-    private func createViewPort() -> MTLViewport {
+    fileprivate func createViewPort() -> MTLViewport {
         return MTLViewport(originX: 0.0,
                            originY: 0.0,
                            width: Double(windowSize.width) * 2,
@@ -67,23 +67,23 @@ class Renderer {
                            zfar: 100.0)
     }
 
-    private func createCameraMatrix() -> GLKMatrix4 {
+    fileprivate func createCameraMatrix() -> GLKMatrix4 {
         return GLKMatrix4New()
     }
 
-    private func createRenderingPipelineWithVertexShader(vertexShaderName: String,
+    fileprivate func createRenderingPipelineWithVertexShader(_ vertexShaderName: String,
                                                          fragmentShaderName: String,
                                                          library: MTLLibrary) -> MTLRenderPipelineState? {
-        let vertexProgram = library.newFunctionWithName(vertexShaderName)!
-        let fragmentProgram = library.newFunctionWithName(fragmentShaderName)!
+        let vertexProgram = library.makeFunction(name: vertexShaderName)!
+        let fragmentProgram = library.makeFunction(name: fragmentShaderName)!
 
         let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
         pipelineStateDescriptor.vertexFunction = vertexProgram
         pipelineStateDescriptor.fragmentFunction = fragmentProgram
-        pipelineStateDescriptor.colorAttachments[0].pixelFormat = MTLPixelFormat.BGRA8Unorm
+        pipelineStateDescriptor.colorAttachments[0].pixelFormat = MTLPixelFormat.bgra8Unorm
 
         do {
-            let newPipelineState = try device.newRenderPipelineStateWithDescriptor(pipelineStateDescriptor)
+            let newPipelineState = try device.makeRenderPipelineState(descriptor: pipelineStateDescriptor)
             return newPipelineState
         } catch let error {
             print("Failed to create pipeline state, error \(error)")
@@ -91,15 +91,15 @@ class Renderer {
         }
     }
 
-    func drawRenderables(drawable: CAMetalDrawable, allRenderables: [Renderable]) {
+    func drawRenderables(_ drawable: CAMetalDrawable, allRenderables: [Renderable]) {
         let renderPassDescriptor = MTLRenderPassDescriptor()
         renderPassDescriptor.colorAttachments[0].texture = drawable.texture
-        renderPassDescriptor.colorAttachments[0].loadAction = .Clear
+        renderPassDescriptor.colorAttachments[0].loadAction = .clear
         renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
 
-        let commandBuffer = commandQueue.commandBuffer()
+        let commandBuffer = commandQueue.makeCommandBuffer()
 
-        let renderCommandEncoder = commandBuffer.renderCommandEncoderWithDescriptor(renderPassDescriptor)
+        let renderCommandEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
         renderCommandEncoder.setViewport(createViewPort())
 
         for renderable in allRenderables  {
@@ -110,35 +110,35 @@ class Renderer {
 
         renderCommandEncoder.endEncoding()
 
-        commandBuffer.presentDrawable(drawable)
+        commandBuffer.present(drawable)
         commandBuffer.commit()
     }
 
-    private func renderRenderable(renderable: Renderable,
+    fileprivate func renderRenderable(_ renderable: Renderable,
                                   renderPipelineState: MTLRenderPipelineState,
                                   renderCommandEncoder: MTLRenderCommandEncoder) {
         renderCommandEncoder.setRenderPipelineState(renderPipelineState)
-        renderCommandEncoder.setVertexBuffer(renderable.vertexBuffer, offset: 0, atIndex: 0)
+        renderCommandEncoder.setVertexBuffer(renderable.vertexBuffer, offset: 0, at: 0)
 
         if let transform: Transform = componentStore.findComponent(Transform.self, forObjectId: renderable.objectId) {
-            renderCommandEncoder.setVertexBuffer(createUniforms(transform.modelMatrix()), offset: 0, atIndex: 1)
+            renderCommandEncoder.setVertexBuffer(createUniforms(transform.modelMatrix()), offset: 0, at: 1)
         }
 
-        renderCommandEncoder.drawPrimitives(.Line,
+        renderCommandEncoder.drawPrimitives(type: .line,
                                             vertexStart: 0,
                                             vertexCount: renderable.vertexCount,
                                             instanceCount: 1)
     }
 
-    private func createUniforms(modelMatrix: GLKMatrix4) -> MTLBuffer {
+    fileprivate func createUniforms(_ modelMatrix: GLKMatrix4) -> MTLBuffer {
         let transformedModelMatrix = GLKMatrix4Multiply(cameraMatrix, modelMatrix)
 
         let sizeOfMatrix4x4 = 16
-        let sizeOfSingleMatrixInBytes = sizeof(Float) * sizeOfMatrix4x4
+        let sizeOfSingleMatrixInBytes = MemoryLayout<Float>.size * sizeOfMatrix4x4
         let sizeOfUniformBufferInBytes = sizeOfSingleMatrixInBytes * 2
 
-        let uniformBuffer = device.newBufferWithLength(sizeOfUniformBufferInBytes,
-                                                       options: MTLResourceOptions.CPUCacheModeDefaultCache)
+        let uniformBuffer = device.makeBuffer(length: sizeOfUniformBufferInBytes,
+                                                       options: MTLResourceOptions())
         let uniformContents = uniformBuffer.contents()
         memcpy(uniformContents,
                GLKMatrix4ToUnsafePointer(transformedModelMatrix),

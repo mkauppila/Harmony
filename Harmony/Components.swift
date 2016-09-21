@@ -16,7 +16,7 @@ protocol Component {
 }
 
 class LanePosition: Component {
-    private (set) var objectId: GameObjectId
+    fileprivate (set) var objectId: GameObjectId
     var laneIndex: Int
 
     init(objectId: GameObjectId, laneIndex: Int) {
@@ -26,7 +26,7 @@ class LanePosition: Component {
 }
 
 class Renderable: Component {
-    private (set) var objectId: GameObjectId
+    fileprivate (set) var objectId: GameObjectId
 
     let vertexBuffer: MTLBuffer
     let vertexCount: Int
@@ -44,7 +44,7 @@ class Renderable: Component {
 }
 
 class Transform: Component {
-    private (set) var objectId: GameObjectId
+    fileprivate (set) var objectId: GameObjectId
 
     var position: GLKVector3
     let angleInDegrees: Float

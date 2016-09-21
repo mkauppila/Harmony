@@ -8,8 +8,8 @@ import MetalKit
 import GLKit
 
 enum LanePositionAction {
-    case MoveLeft
-    case MoveRight
+    case moveLeft
+    case moveRight
 }
 
 class LanePositionSystem {
@@ -19,7 +19,7 @@ class LanePositionSystem {
         self.store = store
     }
 
-    func perform(moverId: GameObjectId, levelId: GameObjectId, action: LanePositionAction) {
+    func perform(_ moverId: GameObjectId, levelId: GameObjectId, action: LanePositionAction) {
         print("Lane position action: \(action)")
 
         let originalLanePosition: LanePosition = store.findComponent(LanePosition.self, forObjectId: moverId)!
@@ -40,11 +40,11 @@ class LanePositionSystem {
             secondVertex: transformedSecondVertex)
     }
 
-    private func updateLanePosition(action: LanePositionAction, lanePosition: LanePosition, levelRenderable: Renderable) -> LanePosition {
+    fileprivate func updateLanePosition(_ action: LanePositionAction, lanePosition: LanePosition, levelRenderable: Renderable) -> LanePosition {
         switch (action) {
-        case .MoveLeft:
+        case .moveLeft:
             lanePosition.laneIndex -= 1
-        case .MoveRight:
+        case .moveRight:
             lanePosition.laneIndex += 1
         }
 
@@ -58,7 +58,7 @@ class LanePositionSystem {
         return lanePosition
     }
 
-    private func verticesForLanePosition(lanePosition: LanePosition, levelRenderable: Renderable) -> (Vertex, Vertex)? {
+    fileprivate func verticesForLanePosition(_ lanePosition: LanePosition, levelRenderable: Renderable) -> (Vertex, Vertex)? {
         let firstIndex =  2 * lanePosition.laneIndex
         let secondIndex =  2 * lanePosition.laneIndex + 1
         if secondIndex > levelRenderable.model.count {
@@ -71,7 +71,7 @@ class LanePositionSystem {
         return (firstVertex, secondVertex)
     }
 
-    private func calculatePlayerPositionBetweenVertices(firstVertex: GLKVector3, secondVertex: GLKVector3) -> GLKVector3 {
+    fileprivate func calculatePlayerPositionBetweenVertices(_ firstVertex: GLKVector3, secondVertex: GLKVector3) -> GLKVector3 {
         let vec1 = firstVertex
         let vec2 = secondVertex
 

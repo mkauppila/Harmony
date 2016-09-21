@@ -37,7 +37,7 @@ vertex VertexOut basic_vertex(const device VertexIn *vertexArray [[ buffer(0) ]]
     return vertexOut;
 }
 
-fragment float4 basic_fragment(const VertexOut vertexOut) {
+fragment float4 basic_fragment(VertexOut vertexOut) {
     if (vertexOut.position.x < 480) {
         return float4(0.5, 0.5, 0.5, 1.0);
     } else {
@@ -45,7 +45,7 @@ fragment float4 basic_fragment(const VertexOut vertexOut) {
     }
 }
 
-fragment float4 bw_fragment(const VertexOut vertexOut) {
+fragment float4 bw_fragment(VertexOut vertexOut) {
     if (vertexOut.position.y < 360 * 1.05) {
         return float4(0.1, 0.4, 0.9, 1.0);
     } else {
